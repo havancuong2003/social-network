@@ -156,6 +156,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
         fileError={fileError}
         handlePostSubmit={handlePostSubmit}
         setTextValue={setTextValue}
+        setFiles={setFiles}
       />
 
       {/* Avatar Modal */}

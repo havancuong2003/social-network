@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineFile } from "react-icons/ai";
 import { UserProfile } from "../../model/user-profile.model";
+import { FilePreview } from "../file-preview";
 
 type UploadPostProps = {
   userData: UserProfile;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   files: File[];
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   fileError: string;
   handlePostSubmit: () => void;
   setTextValue: React.Dispatch<React.SetStateAction<string>>;
@@ -18,10 +20,29 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   fileError,
   handlePostSubmit,
   setTextValue,
+  setFiles,
 }) => {
   const inputRef = useRef<HTMLDivElement | null>(null); // Tham chiếu tới div
   const [fileURLs, setFileURLs] = useState<string[]>([]); // Lưu trữ URL của các file để tránh việc tải lại video
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Trạng thái của modal
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // Tệp đã chọn để hiển thị trong modal
 
+  const handleOpenModal = (file: File) => {
+    setSelectedFile(file); // Cập nhật tệp đã chọn
+    setIsModalOpen(true); // Mở modal
+  };
+
+  // Hàm đóng modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Đóng modal
+    setSelectedFile(null); // Xóa tệp đã chọn
+  };
+  // Hàm xóa tệp
+  const handleRemoveFile = (index: number) => {
+    // Lọc tệp để loại bỏ tệp có chỉ mục tương ứng
+    const updatedFiles = files.filter((_, i) => i !== index);
+    setFiles(updatedFiles); // Cập nhật lại state
+  };
   // Cập nhật lại URLs khi file thay đổi
   useEffect(() => {
     const urls = files.map((file) => URL.createObjectURL(file));
@@ -49,6 +70,15 @@ export const UploadPost: React.FC<UploadPostProps> = ({
 
   return (
     <>
+      <div>
+        <FilePreview
+          files={files}
+          handleCloseModal={handleCloseModal}
+          isModalOpen={isModalOpen}
+          fileURLs={fileURLs}
+          handleRemoveFile={handleRemoveFile}
+        />
+      </div>
       {/* Modal up post */}
       <input type="checkbox" id="my_modal_6" className="modal-toggle" />
       <div className="modal p-2 sm:p-5" role="dialog">
@@ -105,6 +135,7 @@ export const UploadPost: React.FC<UploadPostProps> = ({
                         <div
                           key={index}
                           className=" h-80 bg-gray-100 flex items-center justify-center  relative"
+                          onClick={() => handleOpenModal(file)}
                         >
                           {file.type.startsWith("image/") ? (
                             <img
@@ -126,6 +157,13 @@ export const UploadPost: React.FC<UploadPostProps> = ({
                               </span>
                             </div>
                           )}
+
+                          <button
+                            onClick={() => handleRemoveFile(index)} // Gọi hàm xóa khi nhấn vào nút
+                            className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-1 hover:bg-red-700"
+                          >
+                            X
+                          </button>
                         </div>
                       );
                     })}
