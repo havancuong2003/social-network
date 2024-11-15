@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineFile } from "react-icons/ai";
 import { UserProfile } from "../../model/user-profile.model";
 
@@ -7,6 +7,8 @@ type UploadPostProps = {
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   files: File[];
   fileError: string;
+  handlePostSubmit: () => void;
+  setTextValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const UploadPost: React.FC<UploadPostProps> = ({
@@ -14,9 +16,22 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   handleFileChange,
   files,
   fileError,
+  handlePostSubmit,
+  setTextValue,
 }) => {
-  const [textValue, setTextValue] = useState(""); // Quản lý nội dung nhập liệu
   const inputRef = useRef<HTMLDivElement | null>(null); // Tham chiếu tới div
+  const [fileURLs, setFileURLs] = useState<string[]>([]); // Lưu trữ URL của các file để tránh việc tải lại video
+
+  // Cập nhật lại URLs khi file thay đổi
+  useEffect(() => {
+    const urls = files.map((file) => URL.createObjectURL(file));
+    setFileURLs(urls);
+
+    // Cleanup function để giải phóng bộ nhớ sau khi component unmount
+    return () => {
+      urls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [files]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLDivElement>) => {
     setTextValue(e.target.innerText); // Cập nhật giá trị của div có thể chỉnh sửa
@@ -29,8 +44,8 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   }
 
   // Chỉ lấy tối đa 10 file để hiển thị
-  const displayedFiles = files.slice(0, 10);
-  const remainingFilesCount = files.length - displayedFiles.length;
+  const displayedFiles = files.slice(0, 6);
+  const remainingFilesCount = files.length - 6;
 
   return (
     <>
@@ -66,49 +81,30 @@ export const UploadPost: React.FC<UploadPostProps> = ({
               ref={inputRef} // Gắn tham chiếu vào div
               className="w-full p-2 border rounded-md resize-none border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               contentEditable
-              //    placeholder="What's on your mind?"
               onInput={handleInputChange}
               style={{
                 height: "auto", // Đặt lại để auto-resize hoạt động
-                // overflow: "hidden",
               }}
             />
 
             {displayedFiles.length > 0 && (
               <div className="mt-2">
-                <p className="text-gray-600 font-bold">Tệp đã chọn:</p>
+                <p className="text-gray-600 font-bold">
+                  Tệp đã chọn: {files.length}
+                </p>
                 <div className="">
-                  <div className="flex gap-2">
-                    {displayedFiles.slice(0, 2).map((file, index) => (
-                      <div
-                        key={index}
-                        className="w-1/2 h-80 bg-gray-100 flex items-center justify-center "
-                      >
-                        {file.type.startsWith("image/") ? (
-                          <img
-                            src={URL.createObjectURL(file)}
-                            alt={file.name}
-                            className="w-full h-full object-cover "
-                          />
-                        ) : (
-                          <video
-                            src={URL.createObjectURL(file)}
-                            className="w-full h-full object-cover "
-                            controls
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                  <div className="flex gap-2"></div>
 
-                  <div className="flex gap-2 mt-2">
-                    {displayedFiles.slice(2, 5).map((file, index) => {
+                  <div className="grid grid-cols-2 gap-1 lg:gap-2 mt-2">
+                    {displayedFiles.map((file, index) => {
                       const isLastDisplayedFile =
-                        index === 2 && remainingFilesCount > 0;
+                        index == displayedFiles.length - 1 &&
+                        remainingFilesCount > 0;
+
                       return (
                         <div
                           key={index}
-                          className="w-1/3 h-80 bg-gray-100 flex items-center justify-center  relative"
+                          className=" h-80 bg-gray-100 flex items-center justify-center  relative"
                         >
                           {file.type.startsWith("image/") ? (
                             <img
@@ -118,7 +114,7 @@ export const UploadPost: React.FC<UploadPostProps> = ({
                             />
                           ) : (
                             <video
-                              src={URL.createObjectURL(file)}
+                              src={fileURLs[index]}
                               className="w-full h-full object-cover "
                               controls
                             />
@@ -166,9 +162,18 @@ export const UploadPost: React.FC<UploadPostProps> = ({
               />
             </label>
           </div>
+          <div className="divider border-b border-gray-300"></div>
+          {/* Nút đóng và Đăng bài */}
+          <div className="modal-action flex justify-between w-full">
+            {/* Nút Đăng bài bên trái */}
+            <button
+              className="btn btn-primary text-white"
+              onClick={handlePostSubmit}
+            >
+              Đăng bài
+            </button>
 
-          {/* Nút đóng */}
-          <div className="modal-action">
+            {/* Nút đóng bên phải */}
             <label htmlFor="my_modal_6" className="btn">
               Close!
             </label>

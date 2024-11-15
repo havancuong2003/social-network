@@ -22,7 +22,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
   // Khai báo state để lưu thông tin các tệp được tải lên
   const [files, setFiles] = useState<FileType[]>([]); // Cập nhật kiểu FileType[]
   const [fileError, setFileError] = useState<string>(""); // Cập nhật kiểu string
-
+  const [textValue, setTextValue] = useState(""); // Quản lý nội dung nhập liệu
   if (!id) {
     return null;
   }
@@ -46,6 +46,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files);
+
     const selectedFiles = Array.from(e.target.files || []); // Chuyển đổi tệp chọn thành mảng
 
     // Kiểm tra loại tệp
@@ -70,6 +72,14 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
       setFileError(""); // Reset lỗi
       setFiles(selectedFiles); // Cập nhật các tệp hợp lệ
     }
+  };
+
+  const handlePostSubmit = () => {
+    console.log("Post submitted:", files);
+    console.log("check text", textValue);
+
+    // setFiles([]); // Reset lỗi
+    setFileError(""); // Reset lỗi
   };
 
   return (
@@ -144,6 +154,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
         handleFileChange={handleFileChange}
         files={files}
         fileError={fileError}
+        handlePostSubmit={handlePostSubmit}
+        setTextValue={setTextValue}
       />
 
       {/* Avatar Modal */}
