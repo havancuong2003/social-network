@@ -21,7 +21,7 @@ export const FilePreview: React.FC<FilePreviewProps> = ({
   classes,
 }) => {
   return (
-    <div className="mt-2">
+    <div className="">
       {isModalOpen && (
         <div
           className={clsx(
@@ -31,28 +31,28 @@ export const FilePreview: React.FC<FilePreviewProps> = ({
           onClick={handleCloseModal}
         >
           <div
-            className="bg-white p-4 rounded-lg w-4/5 w-full h-5/6 overflow-auto"
+            className="bg-white p-4 rounded-lg w-3/5 h-5/6 overflow-auto"
             onClick={(e) => e.stopPropagation()} // Ngăn không cho nhấn vào modal đóng modal
           >
             <h2 className="text-lg font-bold">Tệp đã chọn</h2>
             <div className="mt-2">
-              <div className="grid grid-cols-2 gap-2 lg:gap-4 mt-2">
+              <div className="">
                 {files.map((file, index) => {
                   return (
                     <div
                       key={index}
-                      className="h-auto bg-gray-100 flex items-center justify-center relative overflow-hidden"
+                      className="h-3/4 bg-gray-100 flex items-center justify-center relative overflow-hidden border border-gray-400 my-8"
                     >
                       {file.type.startsWith("image/") ? (
                         <img
                           src={URL.createObjectURL(file)}
                           alt={file.name}
-                          className="w-full h-auto max-w-full max-h-80 object-cover"
+                          className="w-max-full object-cover max-h-[calc(70vh)]"
                         />
                       ) : file.type.startsWith("video/") ? (
                         <video
                           src={fileURLs[index]} // URL video cho các file video
-                          className="w-full h-auto max-w-full max-h-80 object-cover"
+                          className="w-max-full object-cover max-h-[calc(70vh)]"
                           controls
                         />
                       ) : (

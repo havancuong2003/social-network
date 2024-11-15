@@ -25,17 +25,14 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   const inputRef = useRef<HTMLDivElement | null>(null); // Tham chiếu tới div
   const [fileURLs, setFileURLs] = useState<string[]>([]); // Lưu trữ URL của các file để tránh việc tải lại video
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Trạng thái của modal
-  const [selectedFile, setSelectedFile] = useState<File | null>(null); // Tệp đã chọn để hiển thị trong modal
 
   const handleOpenModal = (file: File) => {
-    setSelectedFile(file); // Cập nhật tệp đã chọn
     setIsModalOpen(true); // Mở modal
   };
 
   // Hàm đóng modal
   const handleCloseModal = () => {
     setIsModalOpen(false); // Đóng modal
-    setSelectedFile(null); // Xóa tệp đã chọn
   };
   // Hàm xóa tệp
   const handleRemoveFile = (index: number) => {
@@ -100,7 +97,7 @@ export const UploadPost: React.FC<UploadPostProps> = ({
 
           {/* Box 2: Input và review file */}
           <div
-            className="flex flex-col border mt-4 p-4 space-y-4"
+            className="flex flex-col  mt-4 p-4 space-y-4"
             style={{
               maxHeight: "500px", // Giới hạn chiều cao tổng thể
               overflowY: "auto", // Thêm cuộn nếu vượt quá
@@ -134,14 +131,14 @@ export const UploadPost: React.FC<UploadPostProps> = ({
                       return (
                         <div
                           key={index}
-                          className=" h-80 bg-gray-100 flex items-center justify-center  relative"
+                          className=" h-80 bg-gray-100 flex items-center justify-center  relative border border-b-gray-400 rounded-md "
                           onClick={() => handleOpenModal(file)}
                         >
                           {file.type.startsWith("image/") ? (
                             <img
                               src={URL.createObjectURL(file)}
                               alt={file.name}
-                              className="w-full h-full object-cover "
+                              className="w-full h-full object-cover p-2"
                             />
                           ) : (
                             <video
@@ -157,13 +154,6 @@ export const UploadPost: React.FC<UploadPostProps> = ({
                               </span>
                             </div>
                           )}
-
-                          <button
-                            onClick={() => handleRemoveFile(index)} // Gọi hàm xóa khi nhấn vào nút
-                            className="absolute top-2 right-2 text-white bg-red-500 rounded-full p-1 hover:bg-red-700"
-                          >
-                            X
-                          </button>
                         </div>
                       );
                     })}
@@ -200,7 +190,7 @@ export const UploadPost: React.FC<UploadPostProps> = ({
               />
             </label>
           </div>
-          <div className="divider border-b border-gray-300"></div>
+          <div className="border-b border-gray-300 mt-10"></div>
           {/* Nút đóng và Đăng bài */}
           <div className="modal-action flex justify-between w-full">
             {/* Nút Đăng bài bên trái */}
