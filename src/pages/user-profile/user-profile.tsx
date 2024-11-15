@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import clsx from "clsx";
 import { mockUserData } from "../../mock-data/mock-user-profile-data";
 import { FaTimes } from "react-icons/fa";
-import { Post } from "../../components"; // Import component Post
+import { Post, UploadPost } from "../../components"; // Import component Post
 
 type UserProfileProps = {
   classes?: {
@@ -12,11 +12,16 @@ type UserProfileProps = {
   };
 };
 
+type FileType = File; // Kiểu cho file
+
 export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
   const { id } = useParams<{ id: string }>();
   const [userData, setUserData] = useState<any | null>(null);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showCoverModal, setShowCoverModal] = useState(false);
+  // Khai báo state để lưu thông tin các tệp được tải lên
+  const [files, setFiles] = useState<FileType[]>([]); // Cập nhật kiểu FileType[]
+  const [fileError, setFileError] = useState<string>(""); // Cập nhật kiểu string
 
   if (!id) {
     return null;
@@ -40,6 +45,33 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
     return <div className="text-center">Loading...</div>;
   }
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []); // Chuyển đổi tệp chọn thành mảng
+
+    // Kiểm tra loại tệp
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "video/mp4",
+      "video/mov",
+    ];
+    const invalidFiles = selectedFiles.filter(
+      (file) => !allowedTypes.includes(file.type)
+    );
+
+    // Nếu có tệp không hợp lệ, hiển thị lỗi
+    if (invalidFiles.length > 0) {
+      setFileError(
+        "Chỉ chấp nhận tệp hình ảnh (JPEG, PNG) và video (MP4, MOV)."
+      );
+    } else {
+      // Nếu tất cả các tệp hợp lệ, cập nhật trạng thái
+      setFileError(""); // Reset lỗi
+      setFiles(selectedFiles); // Cập nhật các tệp hợp lệ
+    }
+  };
+
   return (
     <div className={clsx("", classes?.userProfile)}>
       <div className={clsx("md:p-2 lg:p-4", classes?.container)}>
@@ -60,7 +92,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
             />
           </div>
         </div>
-
         {/* Personal Info */}
         <div className="pt-14 text-center">
           <h1 className="text-2xl font-bold">
@@ -69,10 +100,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
           <p className="text-gray-600">{userData.bio}</p>
           <p className="text-gray-600">{userData.personalInfo.location}</p>
         </div>
-
         {/* what are you thinking */}
         <div className="mt-10 border-t border-gray-300"></div>
-
         <div className="text-center my-10">
           <div className="flex">
             <img
@@ -108,6 +137,14 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
           ))}
         </div>
       </div>
+
+      {/* Modal up post */}
+      <UploadPost
+        userData={userData}
+        handleFileChange={handleFileChange}
+        files={files}
+        fileError={fileError}
+      />
 
       {/* Avatar Modal */}
       {showAvatarModal && (
@@ -158,46 +195,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
           </div>
         </div>
       )}
-      {/* The button to open modal */}
-
-      {/* Put this part before </body> tag */}
-      <input type="checkbox" id="my_modal_6" className="modal-toggle" />
-      <div className="modal" role="dialog">
-        <div className="modal-box w-full sm:w-4/5 lg:max-w-4xl h-auto">
-          {" "}
-          {/* Responsive width và height tự động */}{" "}
-          {/* Tăng chiều rộng của modal */}
-          <h3 className="text-lg font-bold text-center">Tạo bài viết</h3>
-          <div className="flex">
-            <img
-              src={userData?.profileImages.avatar}
-              alt="avatar"
-              className="w-16 h-16 rounded-full"
-            />
-            <h6 className="ml-4 font-bold">{`${userData.personalInfo.firstName} ${userData.personalInfo.lastName}`}</h6>
-          </div>
-          <div>
-            <textarea
-              className="textarea textarea-bordered w-full mt-4"
-              placeholder="What's on your mind?"
-              rows={8}
-            ></textarea>
-          </div>
-          <div className="border-t border-gray-300 mt-10"></div>
-          <div className="flex justify-between">
-            <div className="mt-4">
-              <p>Thêm vào bài viết của bạn</p>
-            </div>
-            <div>IMG, VIDEO</div>
-          </div>
-          <div className="border-b border-gray-300 mt-4"></div>
-          <div className="modal-action">
-            <label htmlFor="my_modal_6" className="btn">
-              Close!
-            </label>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
