@@ -1,4 +1,3 @@
-// src/components/Post.tsx
 import React, { useEffect, useState } from "react";
 import { PostType } from "../../../model/user-profile.model";
 import { mockPostData } from "../../../mock-data/mock-post-data";
@@ -9,11 +8,12 @@ interface PostProps {
 
 export const Post: React.FC<PostProps> = ({ postId }) => {
   const [post, setPost] = useState<PostType | null>(null);
+  const [newComment, setNewComment] = useState(""); // State cho nội dung bình luận mới
+  const [selectedReaction, setSelectedReaction] = useState<string | null>(null); // Biểu cảm đã chọn
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        // Giả lập fetch từ dữ liệu mock
         const dataMock = mockPostData;
         const postById = dataMock.find((post) => post.postId === postId);
         if (!postById) {
@@ -25,14 +25,46 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
       }
     };
     fetchPost();
-  }, [postId]); // Thêm postId vào dependency array để fetch lại khi postId thay đổi
+  }, [postId]);
 
   if (!post) {
-    return <div>Loading...</div>; // Hiển thị loading khi post chưa được lấy xong
+    return <div>Loading...</div>;
   }
 
+  const handleAddComment = () => {
+    if (newComment.trim()) {
+      const newCommentObj = {
+        commentId: String(Math.random()),
+        userId: "currentUserId", // Thay bằng ID user thực tế
+        userName: "Bạn",
+        userAvatar: "/default-avatar.png", // Đổi thành avatar của user
+        text: newComment,
+        date: new Date().toLocaleString(),
+      };
+
+      setPost((prevPost) =>
+        prevPost
+          ? {
+              ...prevPost,
+              comments: [...prevPost.comments, newCommentObj],
+            }
+          : null
+      );
+
+      setNewComment("");
+    }
+  };
+
+  const handleReaction = (reaction: string) => {
+    setSelectedReaction(reaction);
+    console.log("Reaction selected:", reaction);
+  };
+
   return (
-    <div key={postId} className="card bg-base-100 shadow-md p-4 mb-4">
+    <div
+      key={postId}
+      className="card shadow-xl p-4 mb-8 lg:mb-14 border border-y-gray-300"
+    >
       {/* Thông tin người đăng */}
       <div className="flex items-center mb-2">
         <img
@@ -49,7 +81,7 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
       {/* Nội dung bài đăng */}
       <p>{post.content}</p>
 
-      {/* Hình ảnh trong bài đăng */}
+      {/* Hình ảnh */}
       {post.images.length > 0 && (
         <div className="grid grid-cols-2 gap-2 mt-2">
           {post.images.map((image, index) => (
@@ -63,10 +95,39 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
         </div>
       )}
 
-      {/* Số lượt thích */}
-      <p className="text-gray-500 mt-2">👍 {post.likes} lượt thích</p>
+      {/* Phần tương tác */}
+      <div className="flex items-center mt-4 space-x-4">
+        {/* Like với biểu cảm */}
+        <div className="relative group">
+          <button className="px-4 py-2 bg-gray-200 rounded-md flex items-center space-x-2">
+            👍 {selectedReaction || "Like"}
+          </button>
+          <div className="absolute hidden group-hover:flex flex-row space-x-2 bg-white border shadow-md p-2 rounded-md top-full left-0 mt-2">
+            {[
+              "👍 Thích",
+              "❤️ Yêu Thích",
+              "😂 Haha",
+              "😡 Tức Giận",
+              "😢 Buồn",
+            ].map((reaction, index) => (
+              <button
+                key={index}
+                onClick={() => handleReaction(reaction)}
+                className="p-1 hover:bg-gray-100 rounded-md"
+              >
+                {reaction.split(" ")[0]}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      {/* Bình luận */}
+        {/* Nút bình luận */}
+        <button className="px-4 py-2 bg-gray-200 rounded-md">
+          💬 Bình luận
+        </button>
+      </div>
+
+      {/* Danh sách bình luận */}
       <div className="mt-4">
         <h3 className="font-semibold">Bình luận</h3>
         {post.comments.map((comment) => (
@@ -86,6 +147,23 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
             </div>
           </div>
         ))}
+
+        {/* Thanh nhập bình luận */}
+        <div className="flex items-center mt-4 space-x-2">
+          <input
+            type="text"
+            placeholder="Viết bình luận..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            className="flex-1 px-4 py-2 border rounded-md"
+          />
+          <button
+            onClick={handleAddComment}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
+            Gửi
+          </button>
+        </div>
       </div>
     </div>
   );

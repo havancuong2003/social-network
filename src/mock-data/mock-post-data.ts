@@ -2,6 +2,7 @@ export const mockPostData = [
   {
     postId: "101",
     author: {
+      userId: "1", // Thêm userId vào author
       name: "Nguyen Van A",
       avatar: "https://avatar.iran.liara.run/public/boy",
     },
@@ -13,6 +14,7 @@ export const mockPostData = [
       "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg",
     ],
     likes: 120,
+    likedBy: ["2", "3", "4"],
     comments: [
       {
         commentId: "201",
@@ -35,6 +37,7 @@ export const mockPostData = [
   {
     postId: "102",
     author: {
+      userId: "1", // Thêm userId vào author
       name: "Nguyen Van A",
       avatar: "https://avatar.iran.liara.run/public/boy",
     },
@@ -44,6 +47,7 @@ export const mockPostData = [
       "https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg",
     ],
     likes: 95,
+    likedBy: ["3"],
     comments: [
       {
         commentId: "203",
@@ -58,6 +62,7 @@ export const mockPostData = [
   {
     postId: "103",
     author: {
+      userId: "1", // Thêm userId vào author
       name: "Nguyen Van A",
       avatar: "https://avatar.iran.liara.run/public/boy",
     },
@@ -65,6 +70,7 @@ export const mockPostData = [
     content: "Just finished a great book on JavaScript programming! 📚💻",
     images: ["https://images.pexels.com/photos/17780/pexels-photo.jpg"],
     likes: 80,
+    likedBy: ["2", "3"],
     comments: [
       {
         commentId: "204",
@@ -87,6 +93,7 @@ export const mockPostData = [
   {
     postId: "104",
     author: {
+      userId: "1", // Thêm userId vào author
       name: "Nguyen Van A",
       avatar: "https://avatar.iran.liara.run/public/boy",
     },
@@ -96,6 +103,7 @@ export const mockPostData = [
       "https://images.pexels.com/photos/305189/pexels-photo-305189.jpeg",
     ],
     likes: 150,
+    likedBy: ["3", "2"],
     comments: [
       {
         commentId: "206",
@@ -115,4 +123,5 @@ export const mockPostData = [
       },
     ],
   },
+  // Các post khác cũng cần thêm userId vào author tương tự
 ];

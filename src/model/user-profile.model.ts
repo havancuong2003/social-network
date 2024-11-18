@@ -74,21 +74,34 @@ export interface UserProfile {
 }
 
 export interface PostType {
-  postId: string;
+  postId: string; // ID bài viết
   author: {
-    name: string;
-    avatar: string;
+    userId: string; // ID tác giả
+    name: string; // Tên tác giả
+    avatar: string; // Ảnh đại diện tác giả
   };
-  date: string;
-  content: string;
-  images: string[];
-  likes: number;
-  comments: {
-    commentId: string;
-    userId: string;
-    userName: string;
-    userAvatar: string;
-    text: string;
-    date: string;
-  }[];
+  date: string; // Thời gian đăng bài
+  content: string; // Nội dung bài viết
+  images: string[]; // Danh sách ảnh trong bài viết
+  likes: number; // Số lượt thích
+  likedBy: string[]; // Danh sách userId của những người đã thích bài viết
+  comments: CommentType[]; // Danh sách bình luận
+}
+
+export interface CommentType {
+  commentId: string; // ID bình luận
+  userId: string; // ID người bình luận
+  userName: string; // Tên người bình luận
+  userAvatar: string; // Ảnh đại diện người bình luận
+  text: string; // Nội dung bình luận
+  date: string; // Thời gian bình luận
+  replies?: ReplyType[]; // Danh sách phản hồi (nếu có)
+}
+export interface ReplyType {
+  replyId: string; // ID phản hồi
+  userId: string; // ID người phản hồi
+  userName: string; // Tên người phản hồi
+  userAvatar: string; // Ảnh đại diện người phản hồi
+  text: string; // Nội dung phản hồi
+  date: string; // Thời gian phản hồi
 }

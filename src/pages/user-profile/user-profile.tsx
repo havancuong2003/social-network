@@ -133,16 +133,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
         <div className="mt-6">
           <h2 className="text-lg font-semibold mb-2">Bài đăng</h2>
           {userData.posts.map((post: any) => (
-            <Post
-              key={post.postId}
-              postId={post.postId}
-              author={post.author}
-              date={post.date}
-              content={post.content}
-              images={post.images}
-              likes={post.likes}
-              comments={post.comments}
-            />
+            <Post key={post.postId} postId={post.postId} />
           ))}
         </div>
       </div>
