@@ -157,6 +157,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
         handlePostSubmit={handlePostSubmit}
         setTextValue={setTextValue}
         setFiles={setFiles}
+        textValue={textValue}
       />
 
       {/* Avatar Modal */}
