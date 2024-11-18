@@ -72,3 +72,23 @@ export interface UserProfile {
   posts: Post[];
   bio: string;
 }
+
+export interface PostType {
+  postId: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  date: string;
+  content: string;
+  images: string[];
+  likes: number;
+  comments: {
+    commentId: string;
+    userId: string;
+    userName: string;
+    userAvatar: string;
+    text: string;
+    date: string;
+  }[];
+}

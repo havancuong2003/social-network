@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineFile } from "react-icons/ai";
-import { UserProfile } from "../../model/user-profile.model";
-import { FilePreview } from "../file-preview";
+import { UserProfile } from "../../../model/user-profile.model";
+import { FilePreview } from "../../file-preview";
 
 type UploadPostProps = {
   userData: UserProfile;

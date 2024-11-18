@@ -1,4 +1,4 @@
-import { withClasses } from "../../hocs";
+import { withClasses } from "../../../hocs";
 import { Post as P } from "./post";
 import classes from "./post.module.scss";
 

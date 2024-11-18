@@ -15,7 +15,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
-
+import CloseIcon from "@mui/icons-material/Close";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -56,7 +56,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export function Header({ onSidebarToggle }: { onSidebarToggle: () => void }) {
+export function Header({
+  onSidebarToggle,
+  isOpen,
+}: {
+  onSidebarToggle: () => void;
+  isOpen: boolean;
+}) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -168,7 +174,11 @@ export function Header({ onSidebarToggle }: { onSidebarToggle: () => void }) {
             sx={{ mr: 2, display: { sm: "block", md: "none" } }}
             onClick={onSidebarToggle}
           >
-            <MenuIcon sx={{ display: { xs: "block", md: "none" } }} />
+            {isOpen ? (
+              <CloseIcon />
+            ) : (
+              <MenuIcon sx={{ display: { xs: "block", md: "none" } }} />
+            )}
           </IconButton>
           <Typography
             variant="h6"

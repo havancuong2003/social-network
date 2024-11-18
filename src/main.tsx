@@ -3,13 +3,17 @@ import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import { Home, UserProfile } from "./pages";
-import { FilePreview } from "./components/file-preview";
 import { Layout } from "./layout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: (
+      <Layout>
+        {" "}
+        <Home />
+      </Layout>
+    ),
   },
   {
     path: "/user/:id",

@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { FaRegFileAlt, FaUsers, FaCommentDots, FaCog } from "react-icons/fa";
+import {
+  FaRegFileAlt,
+  FaUsers,
+  FaCommentDots,
+  FaCog,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -9,6 +15,14 @@ export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
   const handleRedirect = () => {
     // Điều hướng đến URL ngoài ứng dụng
     window.location.href = "https://test-chat-frontend.vercel.app/";
+  };
+
+  const handleLogout = () => {
+    // Xử lý đăng xuất (ví dụ xóa token hoặc điều hướng)
+    console.log("Đăng xuất");
+    // Ví dụ: Xóa cookie hoặc localStorage và chuyển hướng về trang đăng nhập
+    window.localStorage.removeItem("userToken"); // Xóa token giả
+    window.location.href = "/login"; // Điều hướng đến trang đăng nhập
   };
 
   // Đảm bảo khi sidebar mở, trang không cuộn trên mobile và có hiệu ứng mờ
@@ -51,24 +65,33 @@ export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
         </div>
 
         <div className="flex flex-col space-y-4">
-          <button className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-200 rounded-md">
+          <button className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-300 rounded-2xl ">
             <FaUsers size={20} />
             <span>Bạn bè</span>
           </button>
-          <button className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-200 rounded-md">
+          <button className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-300 rounded-2xl ">
             <FaRegFileAlt size={20} />
             <span>Nhóm</span>
           </button>
           <button
-            className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-200 rounded-md"
+            className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-300 rounded-2xl "
             onClick={handleRedirect}
           >
             <FaCommentDots size={20} />
             <span>Tin nhắn</span>
           </button>
-          <button className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-200 rounded-md">
+          <button className="flex items-center space-x-2 p-4 text-gray-800 hover:bg-gray-300 rounded-2xl ">
             <FaCog size={20} />
             <span>Cài đặt</span>
+          </button>
+
+          {/* Nút Đăng xuất ở dưới cùng */}
+          <button
+            className="flex items-center space-x-2 p-4 text-red-500 hover:bg-red-200 rounded-2xl "
+            onClick={handleLogout}
+          >
+            <FaSignOutAlt size={20} />
+            <span>Đăng xuất</span>
           </button>
         </div>
       </div>
