@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export function Header() {
+export function Header({ onSidebarToggle }: { onSidebarToggle: () => void }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -159,14 +159,16 @@ export function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+          {/* Nút mở Sidebar */}
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, display: { sm: "block", md: "none" } }}
+            onClick={onSidebarToggle}
           >
-            <MenuIcon />
+            <MenuIcon sx={{ display: { xs: "block", md: "none" } }} />
           </IconButton>
           <Typography
             variant="h6"
