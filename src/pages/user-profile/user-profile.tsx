@@ -78,13 +78,12 @@ export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
     console.log("Post submitted:", files);
     console.log("check text", textValue);
 
-    // setFiles([]); // Reset lỗi
     setFileError(""); // Reset lỗi
   };
 
   return (
-    <div className={clsx("", classes?.userProfile)}>
-      <div className={clsx("md:p-2 lg:p-4", classes?.container)}>
+    <div className={clsx("")}>
+      <div className={clsx("md:p-2 lg:p-4")}>
         {/* Avatar and Cover Image */}
         <div className="relative">
           <img

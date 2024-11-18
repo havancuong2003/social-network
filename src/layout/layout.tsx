@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import { Header } from "../components/header/header";
 import { SideBar } from "../components";
+import clsx from "clsx";
 
 interface LayoutProps {
   children: React.ReactNode;
+  classes?: {
+    [key: string]: string;
+  };
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children, classes }: LayoutProps) => {
   // Trạng thái mở/đóng Sidebar
   const [isSidebarOpen, setSidebarOpen] = React.useState(false);
 
@@ -37,7 +41,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <SideBar isOpen={isSidebarOpen} />
 
       {/* Nội dung */}
-      <div className="flex flex-col w-full lg:ml-[20%]">
+      <div className="flex flex-col w-full ">
         {/* Header */}
         <div className="bg-blue-600 text-white fixed top-0 left-0 right-0 z-20">
           <Header
@@ -46,8 +50,8 @@ export const Layout = ({ children }: LayoutProps) => {
           />
         </div>
         {/* Nội dung chính */}
-        <div className="mt-20 flex justify-center flex-1">
-          <div className="w-full max-w-7xl p-4">{children}</div>
+        <div className="mt-20 flex justify-center">
+          <div className={clsx(classes?.container)}>{children}</div>
         </div>
       </div>
     </div>

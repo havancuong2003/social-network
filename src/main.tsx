@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import { Home, UserProfile } from "./pages";
 import { Layout } from "./layout";
+import TextSubmitComponent from "./pages/test";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,14 @@ const router = createBrowserRouter([
     element: (
       <Layout>
         <UserProfile />
+      </Layout>
+    ),
+  },
+  {
+    path: "/test",
+    element: (
+      <Layout>
+        <TextSubmitComponent />
       </Layout>
     ),
   },
