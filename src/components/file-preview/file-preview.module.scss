@@ -1,0 +1,7 @@
+.fixed {
+  z-index: 9999; /* Đảm bảo z-index đủ cao */
+}
+
+.bg-opacity-50 {
+  z-index: 9998; /* Đảm bảo lớp nền mờ (overlay) không che khuất modal */
+}
