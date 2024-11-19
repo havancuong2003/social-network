@@ -1,4 +1,3 @@
-// src/components/UserProfile.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import clsx from "clsx";
@@ -19,10 +18,10 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   const [userData, setUserData] = useState<any | null>(null);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showCoverModal, setShowCoverModal] = useState(false);
-  // Khai báo state để lưu thông tin các tệp được tải lên
-  const [files, setFiles] = useState<FileType[]>([]); // Cập nhật kiểu FileType[]
-  const [fileError, setFileError] = useState<string>(""); // Cập nhật kiểu string
-  const [textValue, setTextValue] = useState(""); // Quản lý nội dung nhập liệu
+  const [files, setFiles] = useState<FileType[]>([]);
+  const [fileError, setFileError] = useState<string>("");
+  const [textValue, setTextValue] = useState("");
+
   if (!id) {
     return null;
   }
@@ -30,7 +29,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Fetch user data from API
         const mockdata = mockUserData;
         setUserData(mockdata);
       } catch (error) {
@@ -41,6 +39,20 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
     fetchUserData();
   }, [id]);
 
+  // Effect to lock/unlock body scroll
+  useEffect(() => {
+    if (showAvatarModal || showCoverModal) {
+      document.body.style.overflow = "hidden"; // Lock scroll
+    } else {
+      document.body.style.overflow = ""; // Unlock scroll
+    }
+
+    // Cleanup effect
+    return () => {
+      document.body.style.overflow = ""; // Ensure scroll is unlocked on component unmount
+    };
+  }, [showAvatarModal, showCoverModal]);
+
   if (!userData) {
     return <div className="text-center">Loading...</div>;
   }
@@ -48,9 +60,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.files);
 
-    const selectedFiles = Array.from(e.target.files || []); // Chuyển đổi tệp chọn thành mảng
-
-    // Kiểm tra loại tệp
+    const selectedFiles = Array.from(e.target.files || []);
     const allowedTypes = [
       "image/jpeg",
       "image/png",
@@ -62,15 +72,13 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
       (file) => !allowedTypes.includes(file.type)
     );
 
-    // Nếu có tệp không hợp lệ, hiển thị lỗi
     if (invalidFiles.length > 0) {
       setFileError(
         "Chỉ chấp nhận tệp hình ảnh (JPEG, PNG) và video (MP4, MOV)."
       );
     } else {
-      // Nếu tất cả các tệp hợp lệ, cập nhật trạng thái
-      setFileError(""); // Reset lỗi
-      setFiles(selectedFiles); // Cập nhật các tệp hợp lệ
+      setFileError("");
+      setFiles(selectedFiles);
     }
   };
 
@@ -120,7 +128,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
             />
             <label
               htmlFor="my_modal_6"
-              className="flex  items-center w-full hover:cursor-pointer hover:bg-gray-500 hover:text-white rounded-full bg-gray-300 py-2 px-4"
+              className="flex items-center w-full hover:cursor-pointer hover:bg-gray-500 hover:text-white rounded-full bg-gray-300 py-2 px-4"
             >
               <span className="lg:ml-10">
                 Bạn đang nghĩ gì? Click vào đây để đăng trạng thái
@@ -154,11 +162,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
       {showAvatarModal && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-          onClick={() => setShowAvatarModal(false)} // Close avatar modal on background click
+          onClick={() => setShowAvatarModal(false)}
         >
           <div
             className="bg-white rounded-lg overflow-hidden p-4 max-w-screen-lg max-h-screen-lg w-max-4/5 h-max-4/5 relative"
-            onClick={(e) => e.stopPropagation()} // Prevent close on image click
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               className="absolute top-0 right-2 text-2xl hover:bg-gray-700 hover:text-white p-2 rounded-full"
@@ -179,11 +187,11 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
       {showCoverModal && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-          onClick={() => setShowCoverModal(false)} // Close cover modal on background click
+          onClick={() => setShowCoverModal(false)}
         >
           <div
             className="bg-white rounded-lg overflow-hidden pt-8 px-4 lg:p-2 max-w-screen-lg max-h-screen-lg w-max-4/5 h-max-4/5 relative"
-            onClick={(e) => e.stopPropagation()} // Prevent close on image click
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               className="absolute top-0 right-2 text-2xl hover:bg-gray-700 hover:text-white p-2 rounded-full"
