@@ -16,6 +16,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({}) => {
   const { post, error, setPost } = useFetchPost(id); // Sử dụng hook lấy post và error
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   console.log("check currentImageIndex", currentImageIndex);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const inputRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -61,14 +62,14 @@ export const PostDetail: React.FC<PostDetailProps> = ({}) => {
                   />
                 ) : post.media[currentImageIndex].match(/\.(mp4|webm)$/i) ? (
                   <video
+                    ref={videoRef}
                     key={currentImageIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
                     controls
                     className="max-w-full max-h-screen object-contain"
+                    autoPlay={true} // Nếu bạn muốn tự động phát video khi được chọn
                   >
                     <source
-                      src={`${
-                        post.media[currentImageIndex]
-                      }?v=${new Date().getTime()}`} // Thêm tham số để tránh cache
+                      src={post.media[currentImageIndex]} // Loại bỏ tham số ?v= để tránh tải lại video không cần thiết
                       type="video/mp4"
                     />
                     Your browser does not support the video tag.
