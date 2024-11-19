@@ -45,7 +45,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({}) => {
       <div>
         <div className="lg:grid lg:grid-cols-4 lg:gap-4 h-screen">
           {/* Phần 3/4 màn hình bên trái (Ảnh/video) */}
-          <div className="max-w-full h-[calc(30vh)] lg:h-full lg:col-span-3 bg-black flex flex-col items-center justify-center overflow-hidden relative">
+          <div className="max-w-full h-[calc(60vh)] lg:h-full lg:col-span-3 bg-black flex flex-col items-center justify-center overflow-hidden relative">
             {post && post.media.length > 0 ? (
               <>
                 {console.log("check post", post.media[currentImageIndex])}
