@@ -5,14 +5,13 @@ export const mockUserData = {
     lastName: "Van A",
     gender: "Male",
     birthdate: "1990-01-15",
-    location: "Ho Chi Minh City, Vietnam",
-    email: "nguyenvana@example.com",
-    phone: "+84 123 456 789",
+    location: "Dinh Cau Tan Dinh Lang Giang Bac Giang",
+    email: "hacuong7123.work@gmail.com",
+    phone: "+84 383 130 744",
   },
   profileImages: {
-    avatar: "https://avatar.iran.liara.run/public/boy",
-    coverPhoto:
-      "https://images.pexels.com/photos/1323206/pexels-photo-1323206.jpeg?cs=srgb&dl=pexels-mixu-513809-1323206.jpg&fm=jpg",
+    avatar: "/assets/medias/avatar.jpg",
+    coverPhoto: "/assets/medias/family.jpg",
   },
   education: [
     {

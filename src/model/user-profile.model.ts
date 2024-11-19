@@ -82,7 +82,7 @@ export interface PostType {
   };
   date: string; // Thời gian đăng bài
   content: string; // Nội dung bài viết
-  images: string[]; // Danh sách ảnh trong bài viết
+  media: string[]; // Danh sách ảnh trong bài viết
   likes: number; // Số lượt thích
   likedBy: string[]; // Danh sách userId của những người đã thích bài viết
   comments: CommentType[]; // Danh sách bình luận

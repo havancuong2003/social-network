@@ -3,16 +3,19 @@ export const mockPostData = [
     postId: "101",
     author: {
       userId: "1", // Thêm userId vào author
-      name: "Nguyen Van A",
-      avatar: "https://avatar.iran.liara.run/public/boy",
+      name: "Ha Van Cuong",
+      avatar: "/assets/medias/avatar.jpg",
     },
     date: "2024-11-01",
-    content: "Had a great time at the tech conference!",
-    images: [
-      "https://file.hstatic.net/200000695275/article/goku-dragon-ball_thumbnail_hobi_82cdb25dc32a4b4ca1ba9cd98097f375_1024x1024.jpg",
-      "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg",
-      "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg",
-    ],
+    content: "Cường đẹp trai no1",
+    media: [
+      "/assets/medias/img1.jpg",
+      "/assets/medias/img2.jpg",
+      "/assets/medias/img3.jpg",
+      "/assets/medias/music.mp4",
+      "/assets/medias/vid1.mp4",
+      "/assets/medias/video.mp4",
+    ], // Đảm bảo đường dẫn đúng
     likes: 120,
     likedBy: ["2", "3", "4"],
     comments: [
@@ -38,13 +41,16 @@ export const mockPostData = [
     postId: "102",
     author: {
       userId: "1", // Thêm userId vào author
-      name: "Nguyen Van A",
-      avatar: "https://avatar.iran.liara.run/public/boy",
+      name: "Đỗ Thùy Linh",
+      avatar: "/assets/medias/avatarLinh.jpg",
     },
     date: "2024-10-29",
-    content: "Excited to start a new project with the team!",
-    images: [
-      "https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg",
+    content: "Linh Ngao ne",
+    media: [
+      "/assets/medias/funny.mp4",
+      "/assets/medias/imgLinh.jpg",
+      "/assets/medias/imgLinh2.jpg",
+      "/assets/medias/quay.mp4",
     ],
     likes: 95,
     likedBy: ["3"],
@@ -68,7 +74,7 @@ export const mockPostData = [
     },
     date: "2024-09-15",
     content: "Just finished a great book on JavaScript programming! 📚💻",
-    images: ["https://images.pexels.com/photos/17780/pexels-photo.jpg"],
+    media: ["https://images.pexels.com/photos/17780/pexels-photo.jpg"],
     likes: 80,
     likedBy: ["2", "3"],
     comments: [
@@ -99,9 +105,7 @@ export const mockPostData = [
     },
     date: "2024-11-10",
     content: "Celebrating my 10th anniversary at Innovate IT today! 🎉",
-    images: [
-      "https://images.pexels.com/photos/305189/pexels-photo-305189.jpeg",
-    ],
+    media: ["https://images.pexels.com/photos/305189/pexels-photo-305189.jpeg"],
     likes: 150,
     likedBy: ["3", "2"],
     comments: [
