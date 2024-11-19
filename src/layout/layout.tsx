@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Header } from "../components/header/header";
-import { SideBar } from "../components";
+import { Footer, SideBar } from "../components";
 import clsx from "clsx";
 
 interface LayoutProps {
@@ -53,6 +53,9 @@ export const Layout = ({ children, classes }: LayoutProps) => {
         <div className="mt-20 flex justify-center">
           <div className={clsx(classes?.container)}>{children}</div>
         </div>
+      </div>
+      <div className="md:hidden">
+        <Footer />
       </div>
     </div>
   );

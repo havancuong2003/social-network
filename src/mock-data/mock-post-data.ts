@@ -123,5 +123,4 @@ export const mockPostData = [
       },
     ],
   },
-  // Các post khác cũng cần thêm userId vào author tương tự
 ];

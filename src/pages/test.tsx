@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import axios from "axios";
 
 const TextSubmitComponent = () => {
   const [submittedText, setSubmittedText] = useState<string>("");
