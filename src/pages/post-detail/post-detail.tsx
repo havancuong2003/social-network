@@ -65,7 +65,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({}) => {
                     ref={videoRef}
                     key={currentImageIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
                     controls
-                    className="max-w-full max-h-screen object-contain"
+                    className="max-w-full max-h-[calc(60vh)] object-contain"
                     autoPlay={true} // Nếu bạn muốn tự động phát video khi được chọn
                   >
                     <source
