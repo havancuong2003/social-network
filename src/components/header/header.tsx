@@ -187,7 +187,10 @@ export function Header({
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block" }, cursor: "pointer" }}
-            onClick={() => navigate("/")}
+            onClick={() => {
+              navigate("/", { replace: true }); // Điều hướng về trang Home
+              window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn mượt lên đầu trang
+            }}
           >
             MUI
           </Typography>
