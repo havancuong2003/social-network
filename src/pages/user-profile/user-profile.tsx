@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import clsx from "clsx";
 import { mockUserData } from "../../mock-data/mock-user-profile-data";
@@ -21,7 +21,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   const [files, setFiles] = useState<FileType[]>([]);
   const [fileError, setFileError] = useState<string>("");
   const [textValue, setTextValue] = useState("");
-
   if (!id) {
     return null;
   }
