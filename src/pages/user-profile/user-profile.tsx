@@ -14,7 +14,7 @@ type UserProfileProps = {
 
 type FileType = File; // Kiểu cho file
 
-export const UserProfile: React.FC<UserProfileProps> = ({ classes }) => {
+export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   const { id } = useParams<{ id: string }>();
   const [userData, setUserData] = useState<any | null>(null);
   const [showAvatarModal, setShowAvatarModal] = useState(false);

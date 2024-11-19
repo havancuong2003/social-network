@@ -26,7 +26,7 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   const [fileURLs, setFileURLs] = useState<string[]>([]); // Lưu trữ URL của các file để tránh việc tải lại video
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Trạng thái của modal
 
-  const handleOpenModal = (file: File) => {
+  const handleOpenModal = () => {
     setIsModalOpen(true); // Mở modal
   };
 
@@ -132,7 +132,7 @@ export const UploadPost: React.FC<UploadPostProps> = ({
                         <div
                           key={index}
                           className=" h-80 bg-gray-100 flex items-center justify-center  relative border border-b-gray-400 rounded-md "
-                          onClick={() => handleOpenModal(file)}
+                          onClick={() => handleOpenModal()}
                         >
                           {file.type.startsWith("image/") ? (
                             <img

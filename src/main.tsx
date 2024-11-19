@@ -5,7 +5,6 @@ import "./index.css";
 import { Home, PostDetail, UserProfile } from "./pages";
 import { Layout } from "./layout";
 import TextSubmitComponent from "./pages/test";
-import { Post } from "./components";
 
 const router = createBrowserRouter([
   {
