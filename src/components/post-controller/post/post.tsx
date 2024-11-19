@@ -51,17 +51,32 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
       <p>{post?.content}</p>
 
       {/* Hình ảnh */}
-      {/* Hình ảnh */}
-      {post?.images && post.images.length > 0 && (
+      {post?.media && post.media.length > 0 && (
         <div className="grid grid-cols-2 gap-2 mt-2">
-          {post.images.map((image, index) => (
-            <img
-              key={index}
-              src={image}
-              alt={`Post image ${index + 1}`}
-              className="w-full h-40 object-cover rounded-md"
-            />
-          ))}
+          {post.media.map((url, index) => {
+            const isImage = url.match(/\.(jpeg|jpg|gif|png|webp|bmp)$/i); // Kiểm tra nếu là ảnh
+            const isVideo = url.match(/\.(mp4|webm|ogg)$/i); // Kiểm tra nếu là video
+
+            return (
+              <div
+                key={index}
+                className="w-full h-40 rounded-md overflow-hidden"
+              >
+                {isImage ? (
+                  <img
+                    src={url}
+                    alt={`Post media ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : isVideo ? (
+                  <video controls className="w-full h-full object-cover">
+                    <source src={url} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       )}
 

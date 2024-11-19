@@ -169,7 +169,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
             <img
               src={userData?.profileImages.avatar}
               alt="Full-size Avatar"
-              className="w-full h-full object-contain rounded-lg"
+              className="max-w-full max-h-[calc(100vh-6rem)] object-contain rounded-lg"
             />
           </div>
         </div>
@@ -182,7 +182,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
           onClick={() => setShowCoverModal(false)} // Close cover modal on background click
         >
           <div
-            className="bg-white rounded-lg overflow-hidden pt-8 px-4 lg:p-8 max-w-screen-lg max-h-screen-lg w-max-4/5 h-max-4/5 relative"
+            className="bg-white rounded-lg overflow-hidden pt-8 px-4 lg:p-2 max-w-screen-lg max-h-screen-lg w-max-4/5 h-max-4/5 relative"
             onClick={(e) => e.stopPropagation()} // Prevent close on image click
           >
             <button
@@ -194,7 +194,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
             <img
               src={userData?.profileImages.coverPhoto}
               alt="Full-size Cover"
-              className="w-full h-full object-contain rounded-lg"
+              className="max-w-full max-h-[calc(100vh-6rem)] object-contain rounded-lg"
             />
           </div>
         </div>
