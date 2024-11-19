@@ -15,18 +15,20 @@ export const PostDetail: React.FC<PostDetailProps> = ({}) => {
   const { id } = useParams<{ id: string }>();
   const { post, error, setPost } = useFetchPost(id); // Sử dụng hook lấy post và error
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  console.log("check currentImageIndex", currentImageIndex);
+
   const inputRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const handleNextImage = () => {
-    if (post && post.images.length > 0) {
+    if (post && post.media.length > 0) {
       setCurrentImageIndex((prevIndex) =>
-        prevIndex < post.images.length - 1 ? prevIndex + 1 : prevIndex
+        prevIndex < post.media.length - 1 ? prevIndex + 1 : prevIndex
       );
     }
   };
 
   const handlePrevImage = () => {
-    if (post && post.images.length > 0) {
+    if (post && post.media.length > 0) {
       setCurrentImageIndex((prevIndex) =>
         prevIndex > 0 ? prevIndex - 1 : prevIndex
       );
@@ -43,42 +45,66 @@ export const PostDetail: React.FC<PostDetailProps> = ({}) => {
       <div>
         <div className="lg:grid lg:grid-cols-4 lg:gap-4 h-screen">
           {/* Phần 3/4 màn hình bên trái (Ảnh/video) */}
-          <div className="max-w-full h-[calc(30vh)] lg:h-full  lg:col-span-3 bg-black flex flex-col items-center justify-center overflow-hidden relative">
-            {post && post.images.length > 0 ? (
+          <div className="max-w-full h-[calc(30vh)] lg:h-full lg:col-span-3 bg-black flex flex-col items-center justify-center overflow-hidden relative">
+            {post && post.media.length > 0 ? (
               <>
-                <img
-                  src={post.images[currentImageIndex]} // Hiển thị ảnh theo index
-                  alt="Post media"
-                  className="max-w-full max-h-screen object-contain"
-                />
+                {console.log("check post", post.media[currentImageIndex])}
 
+                {/* Kiểm tra media là ảnh hay video */}
+                {post.media[currentImageIndex].match(
+                  /\.(jpeg|jpg|gif|png)$/i
+                ) ? (
+                  <img
+                    src={post.media[currentImageIndex]} // Hiển thị ảnh theo index
+                    alt="Post media"
+                    className="max-w-full max-h-screen object-contain"
+                  />
+                ) : post.media[currentImageIndex].match(/\.(mp4|webm)$/i) ? (
+                  <video
+                    key={currentImageIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
+                    controls
+                    className="max-w-full max-h-screen object-contain"
+                  >
+                    <source
+                      src={`${
+                        post.media[currentImageIndex]
+                      }?v=${new Date().getTime()}`} // Thêm tham số để tránh cache
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <p>Unsupported media type</p> // Thông báo nếu không phải ảnh hay video
+                )}
+
+                {/* Nút điều hướng ảnh/video */}
                 <button
                   onClick={handlePrevImage}
                   className={`text-white bg-gray-500 active:bg-gray-600 bg-opacity-40 lg:hover:bg-white p-1 lg:p-4 lg:hover:text-black lg:active:bg-gray-400 lg:active:text-black rounded-full absolute top-1/2 left-4 transform -translate-y-1/2 ${
                     currentImageIndex === 0 ? "hidden" : ""
-                  }`} // Ẩn nút khi ở ảnh đầu tiên
+                  }`} // Ẩn nút khi ở ảnh/video đầu tiên
                 >
                   <ArrowBackIosIcon />
                 </button>
 
                 <button
                   onClick={handleNextImage}
-                  className={`text-white bg-gray-500 active:bg-gray-600 bg-opacity-40 lg:hover:bg-white p-1 lg:p-4 lg:hover:text-black lg:active:bg-gray-400 lg:active:text-black  rounded-full absolute top-1/2 right-4 transform -translate-y-1/2 ${
-                    currentImageIndex === post.images.length - 1 ? "hidden" : ""
-                  }`} // Ẩn nút khi ở ảnh cuối cùng
+                  className={`text-white bg-gray-500 active:bg-gray-600 bg-opacity-40 lg:hover:bg-white p-1 lg:p-4 lg:hover:text-black lg:active:bg-gray-400 lg:active:text-black rounded-full absolute top-1/2 right-4 transform -translate-y-1/2 ${
+                    currentImageIndex === post.media.length - 1 ? "hidden" : ""
+                  }`} // Ẩn nút khi ở ảnh/video cuối cùng
                 >
                   <ArrowForwardIosIcon />
                 </button>
 
                 <button
                   onClick={handleClose}
-                  className=" text-white bg-black hover:bg-white p-2 hover:text-black active:bg-white active:text-black  rounded-full absolute top-10 left-4 transform -translate-y-1/2"
+                  className="text-white bg-black hover:bg-white p-2 hover:text-black active:bg-white active:text-black rounded-full absolute top-10 left-4 transform -translate-y-1/2"
                 >
                   <CloseIcon style={{ fontSize: "30px" }} />
                 </button>
               </>
             ) : (
-              <p>No media available</p>
+              <p>No media available</p> // Nếu không có media
             )}
           </div>
 
