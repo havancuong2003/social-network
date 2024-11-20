@@ -29,6 +29,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
     const fetchUserData = async () => {
       try {
         const mockdata = mockUserData;
+
         setUserData(mockdata);
       } catch (error) {
         console.error("Error fetching user data:", error);
