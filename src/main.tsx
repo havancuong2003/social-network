@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import { Home, PostDetail, UserProfile } from "./pages";
+import { Home, Login, PostDetail, SignUp, UserProfile } from "./pages";
 import { Layout } from "./layout";
 import TextSubmitComponent from "./pages/test";
 
@@ -35,6 +35,14 @@ const router = createBrowserRouter([
   {
     path: "/post/:id",
     element: <PostDetail />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
   },
 ]);
 

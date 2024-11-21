@@ -6,6 +6,7 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { logoutService } from "../../services/auth.service";
 
 interface SideBarProps {
   isOpen: boolean;
@@ -17,12 +18,12 @@ export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
     window.location.href = "https://test-chat-frontend.vercel.app/";
   };
 
-  const handleLogout = () => {
-    // Xử lý đăng xuất (ví dụ xóa token hoặc điều hướng)
-    console.log("Đăng xuất");
-    // Ví dụ: Xóa cookie hoặc localStorage và chuyển hướng về trang đăng nhập
-    window.localStorage.removeItem("userToken"); // Xóa token giả
-    window.location.href = "/login"; // Điều hướng đến trang đăng nhập
+  const handleLogout = async () => {
+    window.localStorage.removeItem("user");
+    const data = await logoutService();
+    console.log(data);
+
+    window.location.href = "/login";
   };
 
   // Đảm bảo khi sidebar mở, trang không cuộn trên mobile và có hiệu ứng mờ

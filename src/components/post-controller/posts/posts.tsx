@@ -5,12 +5,13 @@ import { Post as PostType } from "../../../model/user-profile.model";
 
 export const Posts = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
+
+  // Thêm dependency array rỗng để useEffect chỉ chạy một lần khi component được mount
   useEffect(() => {
     const fetchPostData = mockPostData;
-    console.log("check mock data", fetchPostData);
-
     setPosts(fetchPostData);
-  });
+  }, []); // chỉ chạy một lần khi component được mount
+  console.log("postsssss");
 
   return (
     <>
