@@ -48,7 +48,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
     <>
       {isOpen && (
         <div className={clsx(classes?.modal_post_detail)}>
-          <div className="lg:grid lg:grid-cols-4 lg:gap-4 h-screen">
+          <div className="lg:grid lg:grid-cols-4  h-screen">
             {/* Phần 3/4 màn hình bên trái (Ảnh/video) */}
             <div className="max-w-full h-[calc(60vh)] lg:h-full lg:col-span-3 bg-black flex flex-col items-center justify-center overflow-hidden relative">
               {post && post.media.length > 0 ? (
@@ -69,7 +69,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                       ref={videoRef}
                       key={currentImageIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
                       controls
-                      className="max-w-full max-h-[calc(60vh)] object-contain"
+                      className="max-w-full h-full object-contain"
                       autoPlay={true} // Nếu bạn muốn tự động phát video khi được chọn
                     >
                       <source
