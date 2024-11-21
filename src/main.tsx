@@ -5,6 +5,7 @@ import "./index.css";
 import { Home, Login, PostDetail, SignUp, UserProfile } from "./pages";
 import { Layout } from "./layout";
 import TextSubmitComponent from "./pages/test";
+import FileUpload from "./test-upload";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,11 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp />,
+  },
+
+  {
+    path: "/upload",
+    element: <FileUpload />,
   },
 ]);
 
