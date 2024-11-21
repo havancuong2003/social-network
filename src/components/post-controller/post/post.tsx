@@ -43,6 +43,7 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
       document.body.style.overflow = "auto"; // Đảm bảo khi component bị unmount thì cuộn trang được bật lại
     };
   }, [isOpen]);
+
   return (
     <>
       <PostDetail isOpen={isOpen} handleClose={handleCloseModal} id={postId} />
@@ -77,15 +78,12 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
         {/* Nội dung bài đăng */}
         <p>{post?.content}</p>
 
-        {/* Hình ảnh */}
+        {/* Hình ảnh và video */}
         {post?.media && post.media.length > 0 && (
           <div className="grid grid-cols-2 gap-2 mt-2">
             {post.media.map((url, index) => {
               const isImage = url.match(/\.(jpeg|jpg|gif|png|webp|bmp)$/i); // Kiểm tra nếu là ảnh
               const isVideo = url.match(/\.(mp4|webm|ogg)$/i); // Kiểm tra nếu là video
-              console.log(
-                `Index: ${index}, URL: ${url}, Is Image: ${isImage}, Is Video: ${isVideo}`
-              );
 
               return (
                 <div
@@ -95,15 +93,15 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
                 >
                   {isImage ? (
                     <img
-                      srcSet={`${url}?w=300&h=300&quality=20`} // Tham số chất lượng thấp cho ảnh nhỏ
-                      src={`${url}?w=300&h=300&quality=20`} // Mặc định, chỉ cung cấp kích thước nhỏ và chất lượng thấp
+                      srcSet={`${url}?q_auto,f_auto,w_500`} // Tham số giảm chất lượng cho ảnh
+                      src={`${url}?q_auto,f_auto,w_500`} // Cung cấp URL ảnh với chất lượng tự động và chiều rộng 500px
                       alt={`Post media ${index + 1}`}
                       className="w-full h-full object-cover"
                       loading="lazy" // Lazy load giúp tải ảnh khi cần
                       onLoad={() =>
                         console.log(
                           "Image loaded with URL:",
-                          `${url}?w=300&h=300&quality=20`
+                          `${url}?q_auto,f_auto,w_500`
                         )
                       } // Log URL hình ảnh khi tải xong
                       onError={() => console.log("Failed to load image:", url)} // Log khi có lỗi tải hình ảnh

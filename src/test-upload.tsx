@@ -12,7 +12,7 @@ const FileUpload = () => {
 
   const handleUpload = async () => {
     const formData = new FormData();
-    files.forEach((file) => formData.append("images", file)); // Key `images` dùng để gửi
+    files.forEach((file) => formData.append("media", file)); // Key `images` dùng để gửi
 
     try {
       // check length form data
