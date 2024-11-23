@@ -10,9 +10,9 @@ export const mockPostData = [
     content: "Cuoc Song ma !!!!",
     media: [
       "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732177503/uploads/ykw3slx81sdw7e8fqnzt.jpg",
+      "https://res.cloudinary.com/ddvt5srdy/video/upload/v1732275726/uploads/mqvqbw1xpfzmptfdtgyg.mp4",
       "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732177503/uploads/ykw3slx81sdw7e8fqnzt.jpg",
-      "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732177503/uploads/ykw3slx81sdw7e8fqnzt.jpg",
-      "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732177503/uploads/ykw3slx81sdw7e8fqnzt.jpg",
+      "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732275724/uploads/cd72qnamlgroqer43tmo.jpg",
       "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732179719/uploads/tpf0zgztusdrxacbo7xd.jpg",
       "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732177503/uploads/ykw3slx81sdw7e8fqnzt.jpg",
       "https://res.cloudinary.com/ddvt5srdy/image/upload/v1732177503/uploads/ykw3slx81sdw7e8fqnzt.jpg",
@@ -28,7 +28,7 @@ export const mockPostData = [
     likedBy: ["2", "3", "4"],
     comments: [
       {
-        commentId: "201",
+        _id: "201",
         userId: "2",
         userName: "Tran Thi B",
         userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -36,7 +36,7 @@ export const mockPostData = [
         date: "2024-11-02",
       },
       {
-        commentId: "202",
+        _id: "202",
         userId: "3",
         userName: "Le Van C",
         userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -64,7 +64,7 @@ export const mockPostData = [
     likedBy: ["3"],
     comments: [
       {
-        commentId: "203",
+        _id: "203",
         userId: "3",
         userName: "Le Van C",
         userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -87,7 +87,7 @@ export const mockPostData = [
     likedBy: ["2", "3"],
     comments: [
       {
-        commentId: "204",
+        _id: "204",
         userId: "2",
         userName: "Tran Thi B",
         userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -95,7 +95,7 @@ export const mockPostData = [
         date: "2024-09-16",
       },
       {
-        commentId: "205",
+        _id: "205",
         userId: "3",
         userName: "Le Van C",
         userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -120,7 +120,7 @@ export const mockPostData = [
     likedBy: ["3", "2"],
     comments: [
       {
-        commentId: "206",
+        _id: "206",
         userId: "3",
         userName: "Le Van C",
         userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -128,7 +128,7 @@ export const mockPostData = [
         date: "2024-11-11",
       },
       {
-        commentId: "207",
+        _id: "207",
         userId: "2",
         userName: "Tran Thi B",
         userAvatar: "https://avatar.iran.liara.run/public/boy",

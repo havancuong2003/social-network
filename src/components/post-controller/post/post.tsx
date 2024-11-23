@@ -7,19 +7,19 @@ import {
 } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import { PostDetail } from "../../../pages";
+import { PostType } from "../../../model/user-profile.model";
 
 interface PostProps {
-  postId: string;
+  postShow: PostType | null;
 }
 
-export const Post: React.FC<PostProps> = ({ postId }) => {
+export const Post: React.FC<PostProps> = ({ postShow }) => {
   const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
-  const { post, error, setPost } = useFetchPost(postId);
+  console.log("postShow", postShow);
+
   const [isOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
-
-  if (error) return <div>Error: {error}</div>;
-
+  const setPost = useFetchPost(postShow?.postId || "").setPost;
   const navigate = useNavigate();
 
   // Open modal logic
@@ -46,42 +46,46 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
 
   return (
     <>
-      <PostDetail isOpen={isOpen} handleClose={handleCloseModal} id={postId} />
+      <PostDetail
+        isOpen={isOpen}
+        handleClose={handleCloseModal}
+        post={postShow}
+      />
       <div className="card shadow-xl p-4 mb-8 lg:mb-14 border border-y-gray-300">
         {/* Thông tin người đăng */}
         <div className="flex items-center mb-2">
           <img
-            src={post?.author.avatar}
-            alt={post?.author.name}
+            src={postShow?.author.avatar}
+            alt={postShow?.author.name}
             className="w-10 h-10 rounded-full mr-3 cursor-pointer"
-            onClick={() => navigate(`/user/${post?.author.userId}`)}
+            onClick={() => navigate(`/user/${postShow?.author.userId}`)}
             loading="lazy" // Lazy load
           />
           <div>
             <p
               className="font-semibold cursor-pointer"
-              onClick={() => navigate(`/user/${post?.author.userId}`)}
+              onClick={() => navigate(`/user/${postShow?.author.userId}`)}
             >
-              {post?.author.name}{" "}
+              {postShow?.author.name}{" "}
             </p>
             <p className="text-gray-500 text-sm ">
               <span
                 className="hover:underline hover:text-black hover:cursor-pointer"
                 onClick={handleOpenModal} // Open modal instead of navigating
               >
-                {post?.date}
+                {postShow?.date}
               </span>
             </p>
           </div>
         </div>
 
         {/* Nội dung bài đăng */}
-        <p>{post?.content}</p>
+        <p>{postShow?.content}</p>
 
         {/* Hình ảnh và video */}
-        {post?.media && post.media.length > 0 && (
+        {postShow?.media && postShow.media.length > 0 && (
           <div className="grid grid-cols-2 gap-2 mt-2">
-            {post.media.map((url, index) => {
+            {postShow.media.map((url, index) => {
               const isImage = url.match(/\.(jpeg|jpg|gif|png|webp|bmp)$/i); // Kiểm tra nếu là ảnh
               const isVideo = url.match(/\.(mp4|webm|ogg)$/i); // Kiểm tra nếu là video
 
@@ -95,29 +99,12 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
                     <img
                       srcSet={`${url}?q_auto,f_auto,w_500`} // Tham số giảm chất lượng cho ảnh
                       src={`${url}?q_auto,f_auto,w_500`} // Cung cấp URL ảnh với chất lượng tự động và chiều rộng 500px
-                      alt={`Post media ${index + 1}`}
+                      alt={`postShow media ${index + 1}`}
                       className="w-full h-full object-cover"
                       loading="lazy" // Lazy load giúp tải ảnh khi cần
-                      onLoad={() =>
-                        console.log(
-                          "Image loaded with URL:",
-                          `${url}?q_auto,f_auto,w_500`
-                        )
-                      } // Log URL hình ảnh khi tải xong
-                      onError={() => console.log("Failed to load image:", url)} // Log khi có lỗi tải hình ảnh
                     />
                   ) : isVideo ? (
-                    <video
-                      controls
-                      className="w-full h-full object-cover"
-                      onLoadedData={() =>
-                        console.log(
-                          "Video loaded with URL:",
-                          `${url}?quality=low`
-                        )
-                      } // Log URL video khi tải xong
-                      onError={() => console.log("Failed to load video:", url)} // Log khi có lỗi tải video
-                    >
+                    <video controls className="w-full h-full object-cover">
                       <source src={`${url}?quality=low`} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
@@ -156,9 +143,9 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
         {/* Danh sách bình luận */}
         <div className="mt-4">
           <h3 className="font-semibold">Bình luận</h3>
-          {post?.comments.map((comment) => (
+          {postShow?.comments.map((comment) => (
             <div
-              key={comment.commentId}
+              key={comment._id}
               className="flex items-start space-x-2 border-t mt-2 pt-2 text-sm"
             >
               <img
@@ -188,7 +175,7 @@ export const Post: React.FC<PostProps> = ({ postId }) => {
               }}
             />
             <button
-              onClick={() => handleAddComment(inputRef, post, setPost)}
+              onClick={() => handleAddComment(inputRef, postShow, setPost)}
               className="px-4 py-2 bg-blue-500 text-white rounded-md"
             >
               Gửi

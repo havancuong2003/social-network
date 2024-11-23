@@ -6,24 +6,25 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { handleAddComment } from "../../utils";
 import CloseIcon from "@mui/icons-material/Close";
 import clsx from "clsx";
+import { PostType } from "../../model/user-profile.model";
 type PostDetailProps = {
   classes?: {
     [key: string]: string;
   };
   handleClose: () => void;
-  id: string;
+  post: PostType | null;
   isOpen?: boolean;
 };
 
 export const PostDetail: React.FC<PostDetailProps> = ({
   classes,
   handleClose,
-  id,
+  post,
   isOpen,
 }) => {
-  const { post, error, setPost } = useFetchPost(id); // Sử dụng hook lấy post và error
+  const id = post?.postId;
+  const { error, setPost } = useFetchPost(id); // Sử dụng hook lấy post và error
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  console.log("check currentImageIndex", currentImageIndex);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const inputRef = useRef<HTMLDivElement>(null);
@@ -157,7 +158,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                   <h3 className="font-semibold mb-2">Bình luận</h3>
                   {post?.comments.map((comment) => (
                     <div
-                      key={comment.commentId}
+                      key={comment._id}
                       className="flex items-start space-x-2 border-t mt-2 pt-2 text-sm"
                     >
                       <img

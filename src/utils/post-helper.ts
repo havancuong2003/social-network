@@ -12,7 +12,7 @@ export const handleAddComment = (
 
     if (formattedText.trim()) {
       const newCommentObj = {
-        commentId: String(Math.random()),
+        _id: String(Math.random()),
         userId: "currentUserId",
         userName: "Bạn",
         userAvatar: "/default-avatar.png",

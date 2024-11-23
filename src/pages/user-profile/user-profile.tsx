@@ -4,6 +4,8 @@ import clsx from "clsx";
 import { mockUserData } from "../../mock-data/mock-user-profile-data";
 import { FaTimes } from "react-icons/fa";
 import { Post, UploadPost } from "../../components"; // Import component Post
+import { uploadPost } from "../../services/post.service";
+import { set } from "ramda";
 
 type UserProfileProps = {
   classes?: {
@@ -82,11 +84,21 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
     }
   };
 
-  const handlePostSubmit = () => {
-    console.log("Post submitted:", files);
-    console.log("check text", textValue);
+  const handlePostSubmit = async () => {
+    const formData = new FormData();
 
-    setFileError(""); // Reset lỗi
+    if (files && files.length > 0) {
+      files.forEach((file) => formData.append("media", file)); // Append từng file vào FormData
+    }
+
+    formData.append("text", textValue); // Append text
+
+    try {
+      const response = await uploadPost(formData); // Gửi formData lên server
+      console.log("response data", response);
+    } catch (error) {
+      console.error("Error during post submit:", error);
+    }
   };
 
   return (

@@ -44,20 +44,10 @@ export interface Friend {
 
 // Bình luận trên bài đăng
 export interface Comment {
-  commentId: string;
+  _id: string;
   userId: string;
   text: string;
   date: string; // ISO format: YYYY-MM-DD
-}
-
-// Bài đăng
-export interface Post {
-  postId: string;
-  date: string; // ISO format: YYYY-MM-DD
-  content: string;
-  image?: string; // URL tới ảnh đính kèm (nếu có)
-  likes: number;
-  comments: Comment[];
 }
 
 // Hồ sơ người dùng chính
@@ -69,7 +59,7 @@ export interface UserProfile {
   workExperience: WorkExperience[];
   socialLinks: SocialLinks;
   friends: Friend[];
-  posts: Post[];
+
   bio: string;
 }
 
@@ -89,7 +79,7 @@ export interface PostType {
 }
 
 export interface CommentType {
-  commentId: string; // ID bình luận
+  _id: string; // ID bình luận
   userId: string; // ID người bình luận
   userName: string; // Tên người bình luận
   userAvatar: string; // Ảnh đại diện người bình luận

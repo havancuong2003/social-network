@@ -66,7 +66,7 @@ export const mockUserData = {
       likes: 120,
       comments: [
         {
-          commentId: "201",
+          _id: "201",
           userId: "2",
           userName: "Tran Thi B",
           userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -74,7 +74,7 @@ export const mockUserData = {
           date: "2024-11-02",
         },
         {
-          commentId: "202",
+          _id: "202",
           userId: "3",
           userName: "Le Van C",
           userAvatar: "https://avatar.iran.liara.run/public/boy",
@@ -97,7 +97,7 @@ export const mockUserData = {
       likes: 95,
       comments: [
         {
-          commentId: "203",
+          _id: "203",
           userId: "3",
           userName: "Le Van C",
           userAvatar: "https://avatar.iran.liara.run/public/boy",
