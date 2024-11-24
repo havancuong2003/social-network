@@ -18,6 +18,7 @@ export const Login = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const userData = await loginService(data.username, data.password);
+
       if (userData) {
         navigate("/");
       }

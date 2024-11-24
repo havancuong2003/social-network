@@ -52,8 +52,14 @@ export const PostDetail: React.FC<PostDetailProps> = ({
       {isOpen && (
         <div className={clsx(classes?.modal_post_detail)}>
           <div className="lg:grid lg:grid-cols-4  h-screen">
-            <div className="max-w-full h-[calc(60vh)] lg:h-full lg:col-span-3 bg-black flex flex-col items-center justify-center overflow-hidden relative">
-              {post && post.media.length > 0 ? (
+            <div
+              className={`max-w-full h-[calc(60vh)] lg:h-full bg-black flex flex-col items-center justify-center overflow-hidden relative ${
+                !post?.media || post.media.length === 0
+                  ? "hidden" // Chiếm 2/4 và căn giữa
+                  : "lg:col-span-3" // Giữ nguyên 3/4 nếu có media
+              }`}
+            >
+              {post && post.media.length > 0 && (
                 <>
                   {console.log("check post", post.media[currentIndex])}
 
@@ -100,21 +106,23 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                   >
                     <ArrowForwardIosIcon />
                   </button>
-
-                  <button
-                    onClick={handleClose}
-                    className="text-white bg-black hover:bg-white p-2 hover:text-black active:bg-white active:text-black rounded-full absolute top-10 left-4 transform -translate-y-1/2"
-                  >
-                    <CloseIcon style={{ fontSize: "30px" }} />
-                  </button>
                 </>
-              ) : (
-                <p>No media available</p> // Nếu không có media
               )}
             </div>
-
+            <button
+              onClick={handleClose}
+              className="text-white bg-black hover:bg-white p-2 hover:text-black active:bg-white active:text-black rounded-full absolute top-10 left-4 transform -translate-y-1/2"
+            >
+              <CloseIcon style={{ fontSize: "30px" }} />
+            </button>
             {/* Phần 1/4 màn hình bên phải (Content và Bình luận) */}
-            <div className="lg:col-span-1 bg-white p-4 shadow-lg  overflow-y-auto">
+            <div
+              className={`lg:col-span-1 bg-white p-4 shadow-lg overflow-y-auto ${
+                !post?.media || post.media.length === 0
+                  ? "lg:col-span-2 lg:col-start-2  h-[calc(80vh)] mt-[10%] rounded-lg" // Chiếm 2 cột và căn giữa
+                  : ""
+              }`}
+            >
               {/* Nội dung bài viết */}
               <div>
                 {post ? (
@@ -138,7 +146,10 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                       </p>
                     </div>
                     <p className="text-gray-500 text-sm">{post?.date}</p>
-                    <p className="text-gray-600 mb-4">{post.content}</p>
+                    <p
+                      className="text-gray-600 mb-4"
+                      dangerouslySetInnerHTML={{ __html: post.content || "" }}
+                    ></p>
                   </div>
                 ) : (
                   <p>Loading post content...</p>

@@ -52,7 +52,13 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   }, [files]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLDivElement>) => {
-    setTextValue(e.target.innerText); // Cập nhật giá trị của div có thể chỉnh sửa
+    // Replace line breaks with <br/> tags
+    const formattedText = e.target.innerText
+      .split("\n")
+      .filter((line) => line.trim() !== "")
+      .join("<br/>");
+
+    setTextValue(formattedText);
   };
 
   // Điều chỉnh chiều cao của div khi nhập liệu
@@ -105,12 +111,19 @@ export const UploadPost: React.FC<UploadPostProps> = ({
           >
             {/* Input */}
             <div
-              ref={inputRef} // Gắn tham chiếu vào div
+              ref={inputRef}
               className="w-full p-2 border rounded-md resize-none border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               contentEditable
               onInput={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  document.execCommand("insertLineBreak");
+                  e.preventDefault();
+                }
+              }}
               style={{
-                height: "auto", // Đặt lại để auto-resize hoạt động
+                height: "auto",
+                whiteSpace: "pre-wrap",
               }}
             />
 

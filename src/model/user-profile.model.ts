@@ -74,7 +74,7 @@ export interface PostType {
   content: string; // Nội dung bài viết
   media: string[]; // Danh sách ảnh trong bài viết
   likes: number; // Số lượt thích
-  likedBy: string[]; // Danh sách userId của những người đã thích bài viết
+  tymedBy: string[]; // Danh sách userId của những người đã thích bài viết
   comments: CommentType[]; // Danh sách bình luận
 }
 

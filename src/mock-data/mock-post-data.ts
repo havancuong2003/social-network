@@ -25,7 +25,7 @@ export const mockPostData = [
       "https://res.cloudinary.com/ddvt5srdy/video/upload/v1732179718/uploads/iysoywv7xyypvmwon0ni.mp4",
     ], // Đảm bảo đường dẫn đúng
     likes: 120,
-    likedBy: ["2", "3", "4"],
+    tymedBy: ["2", "3", "4"],
     comments: [
       {
         _id: "201",

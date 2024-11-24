@@ -1,7 +1,8 @@
 import { PostType } from "../model/user-profile.model";
+import { addComment, changeReaction } from "../services/post.service";
 
 // handleAddComment.ts
-export const handleAddComment = (
+export const handleAddComment = async (
   inputRef: React.RefObject<HTMLDivElement>,
   post: PostType | null,
   handleUpdatePost: (updatedPost: PostType) => void
@@ -15,6 +16,12 @@ export const handleAddComment = (
       date: new Date().toLocaleString(), // Format the date as needed
       userId: "user-id", // Add the userId property
     };
+    const data = {
+      postId: post.postId,
+      text: inputRef.current.innerHTML,
+    };
+    const databack = await addComment(data);
+    console.log("databack", databack);
 
     const updatedPost = {
       ...post,
@@ -41,10 +48,23 @@ export const handleFocusComment = (
 };
 
 // handleReaction.ts
-export const handleReaction = (
+export const handleReaction = async (
   selectedReaction: string | null,
   setSelectedReaction: React.Dispatch<React.SetStateAction<string | null>>,
-  reaction: string
+  reaction: string,
+  post: PostType,
+  userId: string
 ) => {
-  setSelectedReaction(selectedReaction === reaction ? null : reaction);
+  const newReaction = selectedReaction === reaction ? null : reaction;
+
+  // Cập nhật trạng thái reaction ở frontend
+  setSelectedReaction(newReaction);
+
+  const dataBack = await changeReaction({
+    postId: post.postId,
+    reaction: newReaction,
+    userId: userId,
+  });
+
+  console.log("dataBack", dataBack);
 };

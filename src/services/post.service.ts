@@ -25,3 +25,23 @@ export const uploadPost = async (data: FormData) => {
     throw new Error("An error occurred during the upload post service process");
   }
 };
+
+export const addComment = async (data: any) => {
+  try {
+    const response = await axiosConfig.post("api/comment/addComment", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error during add comment service:", error);
+    throw new Error("An error occurred during the add comment service process");
+  }
+};
+
+export const changeReaction = async (data: any) => {
+  try {
+    const response = await axiosConfig.post("api/post/changeReact", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error during add comment service:", error);
+    throw new Error("An error occurred during the add comment service process");
+  }
+};

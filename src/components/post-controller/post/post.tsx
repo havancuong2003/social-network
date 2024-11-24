@@ -19,6 +19,17 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
   const navigate = useNavigate();
+  const userId = localStorage.getItem("user");
+
+  // Cập nhật trạng thái liked khi nhận được dữ liệu từ post
+  useEffect(() => {
+    if (postShow && userId) {
+      const hasLiked = postShow.tymedBy?.some(
+        (user) => user.toString() === userId
+      );
+      setSelectedReaction(hasLiked ? "❤️" : null);
+    }
+  }, [postShow, userId]);
 
   // Open modal logic
   const handleOpenModal = (index: number) => {
@@ -82,7 +93,7 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
         </div>
 
         {/* Nội dung bài đăng */}
-        <p>{postShow?.content}</p>
+        <p dangerouslySetInnerHTML={{ __html: postShow?.content || "" }}></p>
 
         {/* Hình ảnh và video */}
         {postShow?.media && postShow.media.length > 0 && (
@@ -127,7 +138,15 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
                 : "border-gray-500 bg-white"
             }`}
             onClick={() =>
-              handleReaction(selectedReaction, setSelectedReaction, "❤️")
+              postShow &&
+              userId &&
+              handleReaction(
+                selectedReaction,
+                setSelectedReaction,
+                "❤️",
+                postShow,
+                userId
+              )
             }
           >
             {selectedReaction === "❤️" ? "❤️" : "🤍"}
