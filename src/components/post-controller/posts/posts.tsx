@@ -21,10 +21,25 @@ export const Posts = () => {
     fetchPostData(); // Gọi hàm async
   }, []); // Chạy một lần khi component mount
 
+  const handleUpdatePost = (updatedPost: PostType) => {
+    const updatedPosts = posts.map((post) => {
+      if (post.postId === updatedPost.postId) {
+        return updatedPost;
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
   return (
     <>
       {posts.map((post) => {
-        return <Post key={post.postId} postShow={post} />;
+        return (
+          <Post
+            key={post.postId}
+            postShow={post}
+            handleUpdatePost={handleUpdatePost}
+          />
+        );
       })}
     </>
   );

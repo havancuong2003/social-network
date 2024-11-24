@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useFetchPost } from "../../../hooks";
 import {
   handleAddComment,
   handleFocusComment,
@@ -11,24 +10,25 @@ import { PostType } from "../../../model/user-profile.model";
 
 interface PostProps {
   postShow: PostType | null;
+  handleUpdatePost: (updatedPost: PostType) => void;
 }
 
-export const Post: React.FC<PostProps> = ({ postShow }) => {
+export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
   const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
-  console.log("postShow", postShow);
-
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
-  const setPost = useFetchPost(postShow?.postId || "").setPost;
   const navigate = useNavigate();
 
   // Open modal logic
-  const handleOpenModal = () => {
+  const handleOpenModal = (index: number) => {
+    setCurrentIndex(index);
     setIsModalOpen(true);
   };
 
   // Close modal logic
   const handleCloseModal = () => {
+    setCurrentIndex(0);
     setIsModalOpen(false);
   };
 
@@ -50,6 +50,8 @@ export const Post: React.FC<PostProps> = ({ postShow }) => {
         isOpen={isOpen}
         handleClose={handleCloseModal}
         post={postShow}
+        currentIndex={currentIndex}
+        setCurrentIndex={setCurrentIndex}
       />
       <div className="card shadow-xl p-4 mb-8 lg:mb-14 border border-y-gray-300">
         {/* Thông tin người đăng */}
@@ -71,7 +73,7 @@ export const Post: React.FC<PostProps> = ({ postShow }) => {
             <p className="text-gray-500 text-sm ">
               <span
                 className="hover:underline hover:text-black hover:cursor-pointer"
-                onClick={handleOpenModal} // Open modal instead of navigating
+                onClick={() => handleOpenModal(0)} // Open modal instead of navigating
               >
                 {postShow?.date}
               </span>
@@ -93,7 +95,7 @@ export const Post: React.FC<PostProps> = ({ postShow }) => {
                 <div
                   key={index}
                   className="w-full h-40 rounded-md overflow-hidden"
-                  onClick={handleOpenModal} // Open modal instead of navigating
+                  onClick={() => handleOpenModal(index)} // Open modal instead of navigating
                 >
                   {isImage ? (
                     <img
@@ -175,7 +177,9 @@ export const Post: React.FC<PostProps> = ({ postShow }) => {
               }}
             />
             <button
-              onClick={() => handleAddComment(inputRef, postShow, setPost)}
+              onClick={() =>
+                handleAddComment(inputRef, postShow, handleUpdatePost)
+              }
               className="px-4 py-2 bg-blue-500 text-white rounded-md"
             >
               Gửi

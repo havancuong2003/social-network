@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useFetchPost } from "../../hooks";
 import { useRef, useState } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -14,6 +13,9 @@ type PostDetailProps = {
   handleClose: () => void;
   post: PostType | null;
   isOpen?: boolean;
+  handleUpdatePost: (updatedPost: PostType) => void;
+  currentIndex: number;
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const PostDetail: React.FC<PostDetailProps> = ({
@@ -21,17 +23,17 @@ export const PostDetail: React.FC<PostDetailProps> = ({
   handleClose,
   post,
   isOpen,
+  handleUpdatePost,
+  currentIndex,
+  setCurrentIndex,
 }) => {
-  const id = post?.postId;
-  const { error, setPost } = useFetchPost(id); // Sử dụng hook lấy post và error
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const inputRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const handleNextImage = () => {
     if (post && post.media.length > 0) {
-      setCurrentImageIndex((prevIndex) =>
+      setCurrentIndex((prevIndex) =>
         prevIndex < post.media.length - 1 ? prevIndex + 1 : prevIndex
       );
     }
@@ -39,7 +41,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
 
   const handlePrevImage = () => {
     if (post && post.media.length > 0) {
-      setCurrentImageIndex((prevIndex) =>
+      setCurrentIndex((prevIndex) =>
         prevIndex > 0 ? prevIndex - 1 : prevIndex
       );
     }
@@ -50,31 +52,28 @@ export const PostDetail: React.FC<PostDetailProps> = ({
       {isOpen && (
         <div className={clsx(classes?.modal_post_detail)}>
           <div className="lg:grid lg:grid-cols-4  h-screen">
-            {/* Phần 3/4 màn hình bên trái (Ảnh/video) */}
             <div className="max-w-full h-[calc(60vh)] lg:h-full lg:col-span-3 bg-black flex flex-col items-center justify-center overflow-hidden relative">
               {post && post.media.length > 0 ? (
                 <>
-                  {console.log("check post", post.media[currentImageIndex])}
+                  {console.log("check post", post.media[currentIndex])}
 
                   {/* Kiểm tra media là ảnh hay video */}
-                  {post.media[currentImageIndex].match(
-                    /\.(jpeg|jpg|gif|png)$/i
-                  ) ? (
+                  {post.media[currentIndex].match(/\.(jpeg|jpg|gif|png)$/i) ? (
                     <img
-                      src={post.media[currentImageIndex]} // Hiển thị ảnh theo index
+                      src={post.media[currentIndex]} // Hiển thị ảnh theo index
                       alt="Post media"
                       className="max-w-full max-h-screen object-contain"
                     />
-                  ) : post.media[currentImageIndex].match(/\.(mp4|webm)$/i) ? (
+                  ) : post.media[currentIndex].match(/\.(mp4|webm)$/i) ? (
                     <video
                       ref={videoRef}
-                      key={currentImageIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
+                      key={currentIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
                       controls
                       className="max-w-full h-full object-contain"
                       autoPlay={true} // Nếu bạn muốn tự động phát video khi được chọn
                     >
                       <source
-                        src={post.media[currentImageIndex]} // Loại bỏ tham số ?v= để tránh tải lại video không cần thiết
+                        src={post.media[currentIndex]} // Loại bỏ tham số ?v= để tránh tải lại video không cần thiết
                         type="video/mp4"
                       />
                       Your browser does not support the video tag.
@@ -87,7 +86,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                   <button
                     onClick={handlePrevImage}
                     className={`text-white bg-gray-500 active:bg-gray-600 bg-opacity-40 lg:hover:bg-white p-1 lg:p-4 lg:hover:text-black lg:active:bg-gray-400 lg:active:text-black rounded-full absolute top-1/2 left-4 transform -translate-y-1/2 ${
-                      currentImageIndex === 0 ? "hidden" : ""
+                      currentIndex === 0 ? "hidden" : ""
                     }`} // Ẩn nút khi ở ảnh/video đầu tiên
                   >
                     <ArrowBackIosIcon />
@@ -96,9 +95,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                   <button
                     onClick={handleNextImage}
                     className={`text-white bg-gray-500 active:bg-gray-600 bg-opacity-40 lg:hover:bg-white p-1 lg:p-4 lg:hover:text-black lg:active:bg-gray-400 lg:active:text-black rounded-full absolute top-1/2 right-4 transform -translate-y-1/2 ${
-                      currentImageIndex === post.media.length - 1
-                        ? "hidden"
-                        : ""
+                      currentIndex === post.media.length - 1 ? "hidden" : ""
                     }`} // Ẩn nút khi ở ảnh/video cuối cùng
                   >
                     <ArrowForwardIosIcon />
@@ -146,7 +143,6 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                 ) : (
                   <p>Loading post content...</p>
                 )}
-                {error && <p className="text-red-500">{error}</p>}
               </div>
 
               {/* Tương tác */}
@@ -196,7 +192,9 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                   />
                   <button
                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                    onClick={() => handleAddComment(inputRef, post, setPost)} // Wrap function in an anonymous function
+                    onClick={() =>
+                      handleAddComment(inputRef, post, handleUpdatePost)
+                    } // Wrap function in an anonymous function
                   >
                     Gửi
                   </button>

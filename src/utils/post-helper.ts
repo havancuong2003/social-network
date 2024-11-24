@@ -4,36 +4,27 @@ import { PostType } from "../model/user-profile.model";
 export const handleAddComment = (
   inputRef: React.RefObject<HTMLDivElement>,
   post: PostType | null,
-  setPost: React.Dispatch<React.SetStateAction<PostType | null>>
+  handleUpdatePost: (updatedPost: PostType) => void
 ) => {
-  if (inputRef.current && post) {
-    const rawText = inputRef.current.innerText;
-    const formattedText = rawText.replace(/\n/g, "<br />");
+  if (post && inputRef.current) {
+    const newComment = {
+      _id: new Date().toISOString(), // Generate a unique ID for the comment
+      userAvatar: "path/to/avatar", // Replace with actual user avatar
+      userName: "User Name", // Replace with actual user name
+      text: inputRef.current.innerHTML,
+      date: new Date().toLocaleString(), // Format the date as needed
+      userId: "user-id", // Add the userId property
+    };
 
-    if (formattedText.trim()) {
-      const newCommentObj = {
-        _id: String(Math.random()),
-        userId: "currentUserId",
-        userName: "Bạn",
-        userAvatar: "/default-avatar.png",
-        text: formattedText,
-        date: new Date().toLocaleString(),
-      };
+    const updatedPost = {
+      ...post,
+      comments: [...post.comments, newComment], // Add the new comment
+    };
 
-      setPost((prevPost) =>
-        prevPost
-          ? {
-              ...prevPost,
-              comments: [...prevPost.comments, newCommentObj],
-            }
-          : null
-      );
-
-      inputRef.current.innerText = "";
-    }
+    handleUpdatePost(updatedPost); // Update the post in the parent component
+    inputRef.current.innerHTML = ""; // Clear the input after adding the comment
   }
 };
-
 // handleFocusComment.ts
 export const handleFocusComment = (
   inputRef: React.RefObject<HTMLDivElement>
