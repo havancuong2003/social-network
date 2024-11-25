@@ -1,18 +1,22 @@
 import { axiosConfig } from "./axios.config";
 
-export const getPostsService = async () => {
+export const getPostsService = async (page: number, limit: number = 5) => {
   try {
-    const response = await axiosConfig.get("/api/post");
-    return response.data;
-  } catch (error) {
+    const response = await axiosConfig.get(`/api/post`, {
+      params: { page, limit }, // Gửi query params
+    });
+
+    return response.data; // Trả về danh sách bài viết
+  } catch (error: any) {
     console.error("Error during get post service:", error);
-    throw new Error("An error occurred during the get post service process");
+    throw new Error(
+      error.response?.data?.message || "An error occurred during fetching posts"
+    );
   }
 };
 
 export const uploadPost = async (data: FormData) => {
   try {
-    console.log("formData", data.entries().next());
     const response = await axiosConfig.post("api/post/uploadPost", data, {
       headers: {
         "Content-Type": "multipart/form-data",

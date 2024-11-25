@@ -96,7 +96,10 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
         </div>
 
         {/* Nội dung bài đăng */}
-        <p dangerouslySetInnerHTML={{ __html: postShow?.content || "" }}></p>
+        <p
+          className="post-content break-words"
+          dangerouslySetInnerHTML={{ __html: postShow?.content || "" }}
+        ></p>
 
         {/* Hình ảnh và video */}
         {postShow?.media && postShow.media.length > 0 && (

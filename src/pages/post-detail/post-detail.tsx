@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { handleAddComment, handleReaction } from "../../utils";
 import CloseIcon from "@mui/icons-material/Close";
 import clsx from "clsx";
 import { PostType } from "../../model/user-profile.model";
+
 type PostDetailProps = {
   classes?: {
     [key: string]: string;
@@ -32,9 +33,9 @@ export const PostDetail: React.FC<PostDetailProps> = ({
   setSelectedReaction,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-
   const inputRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
   const handleNextImage = () => {
     if (post && post.media.length > 0) {
       setCurrentIndex((prevIndex) =>
@@ -57,7 +58,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
     <>
       {isOpen && (
         <div className={clsx(classes?.modal_post_detail)}>
-          <div className="lg:grid lg:grid-cols-4  h-screen">
+          <div className="lg:grid lg:grid-cols-4 h-screen">
             <div
               className={`max-w-full h-[calc(60vh)] lg:h-full bg-black flex flex-col items-center justify-center overflow-hidden relative ${
                 !post?.media || post.media.length === 0
@@ -67,9 +68,6 @@ export const PostDetail: React.FC<PostDetailProps> = ({
             >
               {post && post.media.length > 0 && (
                 <>
-                  {console.log("check post", post.media[currentIndex])}
-
-                  {/* Kiểm tra media là ảnh hay video */}
                   {post.media[currentIndex].match(/\.(jpeg|jpg|gif|png)$/i) ? (
                     <img
                       src={post.media[currentIndex]} // Hiển thị ảnh theo index
@@ -82,7 +80,6 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                       key={currentIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
                       controls
                       className="max-w-full h-full object-contain"
-                      // autoPlay={true} // Nếu bạn muốn tự động phát video khi được chọn
                     >
                       <source
                         src={post.media[currentIndex]} // Loại bỏ tham số ?v= để tránh tải lại video không cần thiết
@@ -153,7 +150,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                     </div>
                     <p className="text-gray-500 text-sm">{post?.date}</p>
                     <p
-                      className="text-gray-600 mb-4"
+                      className="text-gray-600 mb-4 break-words"
                       dangerouslySetInnerHTML={{ __html: post.content || "" }}
                     ></p>
                   </div>

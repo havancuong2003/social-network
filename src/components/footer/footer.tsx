@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useNavigate } from "react-router-dom";
+import { usePosts } from "../../contexts";
+
 export const Footer = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const navigate = useNavigate();
+
   const handleScroll = () => {
     if (window.scrollY > lastScrollY) {
       // Nếu cuộn xuống, ẩn footer
@@ -26,6 +27,11 @@ export const Footer = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]); // Chạy lại effect khi lastScrollY thay đổi
 
+  const { resetPosts } = usePosts(); // Lấy hàm resetPosts từ hook
+
+  const handleHomeClick = () => {
+    resetPosts(); // Gọi resetPosts khi bấm nút Home
+  };
   return (
     <div
       className={`fixed bottom-0 left-0 right-0 bg-gray-200 text-white p-2 transition-transform duration-300 ${
@@ -36,13 +42,7 @@ export const Footer = () => {
         {/* Home Button */}
         {/* Home Button */}
         <div className="flex justify-center items-center w-1/4">
-          <div
-            className=""
-            onClick={() => {
-              navigate("/", { replace: true }); // Điều hướng về trang Home
-              window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn mượt lên đầu trang
-            }}
-          >
+          <div onClick={handleHomeClick}>
             <HomeIcon fontSize="large" sx={{ color: "black" }} />
           </div>
         </div>

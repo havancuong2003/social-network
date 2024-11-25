@@ -1,48 +1,49 @@
-import { useEffect, useState } from "react";
+import { CircularProgress, Typography, Fade } from "@mui/material";
+import { usePosts } from "../../../contexts";
 import { Post } from "../post";
-import { PostType } from "../../../model/user-profile.model";
-import { getPostsService } from "../../../services/post.service";
 
 export const Posts = () => {
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const { posts, loading, error, updatePost, hasMore, resetPosts } = usePosts();
 
-  useEffect(() => {
-    const fetchPostData = async () => {
-      try {
-        const data = await getPostsService();
-        console.log("posts", data);
+  if (loading && posts.length === 0) {
+    return (
+      <Fade in={loading}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "200px",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      </Fade>
+    );
+  }
 
-        setPosts(data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
+  if (error) {
+    return <p>{error}</p>;
+  }
 
-    fetchPostData(); // Gọi hàm async
-  }, []); // Chạy một lần khi component mount
-
-  const handleUpdatePost = (updatedPost: PostType) => {
-    console.log("updatedPost", updatedPost);
-
-    const updatedPosts = posts.map((post) => {
-      if (post.postId === updatedPost.postId) {
-        return updatedPost;
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
-  };
   return (
-    <>
-      {posts.map((post) => {
-        return (
-          <Post
-            key={post.postId}
-            postShow={post}
-            handleUpdatePost={handleUpdatePost}
-          />
-        );
-      })}
-    </>
+    <div>
+      {posts.map((post) => (
+        <Post key={post.postId} postShow={post} handleUpdatePost={updatePost} />
+      ))}
+      <button onClick={resetPosts}>HVC</button>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <Fade in={loading || !hasMore}>
+          <div>
+            {loading && <CircularProgress size={24} />}
+            {!hasMore && (
+              <Typography variant="h6" color="textSecondary">
+                Hết bài viết
+              </Typography>
+            )}
+          </div>
+        </Fade>
+      </div>
+    </div>
   );
 };
