@@ -2,6 +2,7 @@ import { axiosConfig } from "./axios.config";
 
 export const getPostsService = async (page: number, limit: number = 5) => {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 300));
     const response = await axiosConfig.get(`/api/post`, {
       params: { page, limit }, // Gửi query params
     });
