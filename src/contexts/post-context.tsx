@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { PostType } from "../model/user-profile.model";
 import { getPostsService } from "../services/post.service";
+import { set } from "ramda";
 
 interface PostContextType {
   posts: PostType[];
@@ -81,10 +82,14 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [isClickedHome]);
 
   const resetPosts = () => {
-    setPosts([]);
-    setPage(1);
-    setHasMore(true); // Đặt lại trạng thái có thêm bài viết
-    setIsClickedHome((pre) => !pre);
+    setTimeout(() => {
+      setPosts([]);
+      setPage(1);
+      setHasMore(true); // Đặt lại trạng thái có thêm bài viết
+      setIsClickedHome((pre) => !pre);
+    }, 1000);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const loadMore = () => {

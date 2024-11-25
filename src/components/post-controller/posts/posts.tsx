@@ -3,7 +3,7 @@ import { usePosts } from "../../../contexts";
 import { Post } from "../post";
 
 export const Posts = () => {
-  const { posts, loading, error, updatePost, hasMore, resetPosts } = usePosts();
+  const { posts, loading, error, updatePost, hasMore } = usePosts();
 
   if (loading && posts.length === 0) {
     return (
@@ -31,7 +31,7 @@ export const Posts = () => {
       {posts.map((post) => (
         <Post key={post.postId} postShow={post} handleUpdatePost={updatePost} />
       ))}
-      <button onClick={resetPosts}>HVC</button>
+
       <div style={{ textAlign: "center", marginTop: "20px" }}>
         <Fade in={loading || !hasMore}>
           <div>
