@@ -56,6 +56,7 @@ export const handleReaction = async (
   userId: string
 ) => {
   const newReaction = selectedReaction === reaction ? null : reaction;
+  console.log("aaaaaa");
 
   // Cập nhật trạng thái reaction ở frontend
   setSelectedReaction(newReaction);

@@ -22,6 +22,8 @@ export const Posts = () => {
   }, []); // Chạy một lần khi component mount
 
   const handleUpdatePost = (updatedPost: PostType) => {
+    console.log("updatedPost", updatedPost);
+
     const updatedPosts = posts.map((post) => {
       if (post.postId === updatedPost.postId) {
         return updatedPost;

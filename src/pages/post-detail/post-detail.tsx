@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { handleAddComment } from "../../utils";
+import { handleAddComment, handleReaction } from "../../utils";
 import CloseIcon from "@mui/icons-material/Close";
 import clsx from "clsx";
 import { PostType } from "../../model/user-profile.model";
@@ -16,6 +16,8 @@ type PostDetailProps = {
   handleUpdatePost: (updatedPost: PostType) => void;
   currentIndex: number;
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
+  selectedReaction: string | null;
+  setSelectedReaction: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export const PostDetail: React.FC<PostDetailProps> = ({
@@ -26,6 +28,8 @@ export const PostDetail: React.FC<PostDetailProps> = ({
   handleUpdatePost,
   currentIndex,
   setCurrentIndex,
+  selectedReaction,
+  setSelectedReaction,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -46,6 +50,8 @@ export const PostDetail: React.FC<PostDetailProps> = ({
       );
     }
   };
+
+  const userId = localStorage.getItem("user");
 
   return (
     <>
@@ -76,7 +82,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                       key={currentIndex} // Thêm key để React tái tạo lại video khi chỉ số thay đổi
                       controls
                       className="max-w-full h-full object-contain"
-                      autoPlay={true} // Nếu bạn muốn tự động phát video khi được chọn
+                      // autoPlay={true} // Nếu bạn muốn tự động phát video khi được chọn
                     >
                       <source
                         src={post.media[currentIndex]} // Loại bỏ tham số ?v= để tránh tải lại video không cần thiết
@@ -158,8 +164,27 @@ export const PostDetail: React.FC<PostDetailProps> = ({
 
               {/* Tương tác */}
               <div className="flex flex-col">
-                <button className="px-4 py-2 bg-red-500 text-white rounded-md mb-4">
-                  ❤️ Thích
+                <button
+                  className={`px-4 py-2 rounded-md  ${
+                    selectedReaction === "❤️"
+                      ? "text-red-700 bg-red-200"
+                      : "border-gray-500 bg-gray-400"
+                  }`}
+                  onClick={() =>
+                    post &&
+                    userId &&
+                    handleReaction(
+                      selectedReaction,
+                      setSelectedReaction,
+                      "❤️",
+                      post,
+                      userId
+                    )
+                  }
+                >
+                  <span className="text-xl">
+                    {selectedReaction === "❤️" ? "❤️" : "🤍"}
+                  </span>
                 </button>
                 <div>
                   <h3 className="font-semibold mb-2">Bình luận</h3>
@@ -205,7 +230,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
                     onClick={() =>
                       handleAddComment(inputRef, post, handleUpdatePost)
-                    } // Wrap function in an anonymous function
+                    }
                   >
                     Gửi
                   </button>

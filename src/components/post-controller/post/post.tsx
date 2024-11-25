@@ -63,6 +63,9 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
         post={postShow}
         currentIndex={currentIndex}
         setCurrentIndex={setCurrentIndex}
+        selectedReaction={selectedReaction}
+        setSelectedReaction={setSelectedReaction}
+        handleUpdatePost={handleUpdatePost}
       />
       <div className="card shadow-xl p-4 mb-8 lg:mb-14 border border-y-gray-300">
         {/* Thông tin người đăng */}
