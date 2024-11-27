@@ -164,7 +164,10 @@ export function Header({
     </Menu>
   );
   const navigate = useNavigate();
-
+  const handleGoHome = () => {
+    navigate("/");
+    resetPosts();
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -189,7 +192,7 @@ export function Header({
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block" }, cursor: "pointer" }}
-            onClick={resetPosts}
+            onClick={handleGoHome}
           >
             MUI
           </Typography>

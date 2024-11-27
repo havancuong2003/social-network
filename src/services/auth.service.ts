@@ -4,9 +4,6 @@ import { SignUpType } from "../model/login-signup.model";
 
 export const loginService = async (username: string, password: string) => {
   try {
-    console.log("axios config", axiosConfig);
-    console.log(import.meta.env.VITE_BACKEND_URL);
-
     // Gửi yêu cầu đăng nhập đến backend
     const response = await axiosConfig.post("/api/auth/login", {
       userName: username,

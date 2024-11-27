@@ -1,20 +1,23 @@
-import { PostType } from "../model/user-profile.model";
+import { PostType, UserType } from "../model/user-profile.model";
 import { addComment, changeReaction } from "../services/post.service";
 
 // handleAddComment.ts
 export const handleAddComment = async (
   inputRef: React.RefObject<HTMLDivElement>,
   post: PostType | null,
-  handleUpdatePost: (updatedPost: PostType) => void
+  handleUpdatePost: (updatedPost: PostType) => void,
+  user: UserType | null
 ) => {
+  console.log("check user", user);
+
   if (post && inputRef.current) {
     const newComment = {
-      _id: new Date().toISOString(), // Generate a unique ID for the comment
-      userAvatar: "path/to/avatar", // Replace with actual user avatar
-      userName: "User Name", // Replace with actual user name
+      _id: new Date().toISOString(),
+      userAvatar: user?.profilePic || "",
+      userName: user?.fullName || "Unknown User", // Provide a default value
       text: inputRef.current.innerHTML,
-      date: new Date().toLocaleString(), // Format the date as needed
-      userId: "user-id", // Add the userId property
+      date: new Date().toLocaleString(),
+      userId: user?._id || "", // Ensure userId is a string, fallback to an empty string if undefined
     };
     const data = {
       postId: post.postId,

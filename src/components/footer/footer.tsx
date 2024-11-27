@@ -34,7 +34,7 @@ export const Footer = () => {
   };
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 bg-gray-200 text-white p-2 transition-transform duration-300 ${
+      className={` lg:hidden fixed bottom-0 left-0 right-0 bg-gray-200 text-white p-2 transition-transform duration-300 ${
         isVisible ? "transform translate-y-0" : "transform translate-y-full"
       }`}
     >

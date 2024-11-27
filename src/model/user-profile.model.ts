@@ -1,45 +1,7 @@
-export interface PersonalInfo {
-  firstName: string;
-  lastName: string;
-  gender: "Male" | "Female" | "Other";
-  birthdate: string; // ISO format: YYYY-MM-DD
-  location: string;
-  email: string;
-  phone: string;
-}
-
 // Hình ảnh hồ sơ
 export interface ProfileImages {
   avatar: string; // URL tới ảnh đại diện
   coverPhoto: string; // URL tới ảnh bìa
-}
-
-// Học vấn
-export interface Education {
-  schoolName: string;
-  degree: string;
-  yearGraduated: string;
-}
-
-// Kinh nghiệm làm việc
-export interface WorkExperience {
-  companyName: string;
-  position: string;
-  years: string; // e.g., "2015 - 2020"
-}
-
-// Liên kết mạng xã hội
-export interface SocialLinks {
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-}
-
-// Bạn bè
-export interface Friend {
-  friendId: string;
-  name: string;
-  avatar: string; // URL tới ảnh đại diện bạn bè
 }
 
 // Bình luận trên bài đăng
@@ -51,17 +13,6 @@ export interface Comment {
 }
 
 // Hồ sơ người dùng chính
-export interface UserProfile {
-  userId: string;
-  personalInfo: PersonalInfo;
-  profileImages: ProfileImages;
-  education: Education[];
-  workExperience: WorkExperience[];
-  socialLinks: SocialLinks;
-  friends: Friend[];
-
-  bio: string;
-}
 
 export interface PostType {
   postId: string; // ID bài viết
@@ -94,4 +45,28 @@ export interface ReplyType {
   userAvatar: string; // Ảnh đại diện người phản hồi
   text: string; // Nội dung phản hồi
   date: string; // Thời gian phản hồi
+}
+
+export interface UserType {
+  _id: string;
+  email: string;
+  password: string;
+  fullName: string;
+  userName: string;
+  gender: "male" | "female";
+  profilePic?: string;
+  biography?: string;
+  coverPic?: string;
+  birthday?: Date | null;
+  location?: string;
+  relationship?: string;
+  phone?: string;
+  website?: string;
+  education?: string;
+  work?: string;
+  socialLinks?: string[];
+  friends?: string[]; // Dùng ObjectId dưới dạng string
+  createdAt?: Date;
+  updatedAt?: Date;
+  posts?: PostType[];
 }

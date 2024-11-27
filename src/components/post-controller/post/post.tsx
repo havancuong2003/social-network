@@ -7,6 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { PostDetail } from "../../../pages";
 import { PostType } from "../../../model/user-profile.model";
+import { useAuth } from "../../../contexts";
 
 interface PostProps {
   postShow: PostType | null;
@@ -19,7 +20,9 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
   const navigate = useNavigate();
-  const userId = localStorage.getItem("user");
+  //const userId = localStorage.getItem("user");
+  const { user } = useAuth();
+  const userId = user?._id;
 
   // Cập nhật trạng thái liked khi nhận được dữ liệu từ post
   useEffect(() => {
@@ -54,7 +57,17 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
       document.body.style.overflow = "auto"; // Đảm bảo khi component bị unmount thì cuộn trang được bật lại
     };
   }, [isOpen]);
+  const handleCommentSubmit = async () => {
+    if (postShow) {
+      await handleAddComment(inputRef, postShow, handleUpdatePost, user);
+    }
+  };
 
+  const handleAvatarClick = (id: string) => {
+    window.scrollTo(0, 0); // Cuộn lên đầu trang
+    navigate(`/user/${id}`);
+    window.scrollTo(0, 0); // Cuộn lên đầu trang
+  };
   return (
     <>
       <PostDetail
@@ -74,13 +87,19 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
             src={postShow?.author.avatar}
             alt={postShow?.author.name}
             className="w-10 h-10 rounded-full mr-3 cursor-pointer"
-            onClick={() => navigate(`/user/${postShow?.author.userId}`)}
+            onClick={() =>
+              postShow?.author.userId &&
+              handleAvatarClick(postShow.author.userId)
+            }
             loading="lazy" // Lazy load
           />
           <div>
             <p
               className="font-semibold cursor-pointer"
-              onClick={() => navigate(`/user/${postShow?.author.userId}`)}
+              onClick={() =>
+                postShow?.author.userId &&
+                handleAvatarClick(postShow.author.userId)
+              }
             >
               {postShow?.author.name}{" "}
             </p>
@@ -178,7 +197,8 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
               <img
                 src={comment.userAvatar}
                 alt={comment.userName}
-                className="w-8 h-8 rounded-full"
+                className="w-8 h-8 rounded-full cursor-pointer"
+                onClick={() => handleAvatarClick(comment.userId)}
               />
               <div>
                 <p className="font-semibold">{comment.userName}</p>
@@ -202,9 +222,7 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
               }}
             />
             <button
-              onClick={() =>
-                handleAddComment(inputRef, postShow, handleUpdatePost)
-              }
+              onClick={handleCommentSubmit}
               className="px-4 py-2 bg-blue-500 text-white rounded-md"
             >
               Gửi

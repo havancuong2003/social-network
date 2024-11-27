@@ -7,13 +7,14 @@ import { Layout } from "./layout";
 import TextSubmitComponent from "./pages/test";
 import FileUpload from "./test-upload";
 import { PostProvider } from "./contexts/post-context";
+import { UserProvider } from "./contexts";
+import { UserPostProvider } from "./contexts/user-post.context";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <Layout>
-        {" "}
         <Home />
       </Layout>
     ),
@@ -55,8 +56,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <PostProvider>
-      <RouterProvider router={router} />
-    </PostProvider>
+    <UserProvider>
+      <UserPostProvider>
+        <PostProvider>
+          <RouterProvider router={router} />
+        </PostProvider>
+      </UserPostProvider>
+    </UserProvider>
   </React.StrictMode>
 );

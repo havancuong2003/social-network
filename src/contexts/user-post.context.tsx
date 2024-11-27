@@ -6,10 +6,9 @@ import React, {
   useRef,
 } from "react";
 import { PostType } from "../model/user-profile.model";
-import { getPostsService } from "../services/post.service";
-import { useAuth } from "./user-context";
+import { getPostsServiceByUser } from "../services/post.service";
 
-interface PostContextType {
+interface UserPostContextType {
   posts: PostType[];
   loading: boolean;
   error: string | null;
@@ -18,11 +17,14 @@ interface PostContextType {
   hasMore: boolean;
   resetPosts: () => void;
   page: number;
+  setUserId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const PostContext = createContext<PostContextType | undefined>(undefined);
+const UserPostContext = createContext<UserPostContextType | undefined>(
+  undefined
+);
 
-export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
+export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [posts, setPosts] = useState<PostType[]>([]);
@@ -32,7 +34,8 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
   const [hasMore, setHasMore] = useState<boolean>(true);
   const isFirstRender = useRef(true);
   const [isClickedHome, setIsClickedHome] = useState<boolean>(false);
-  const { user } = useAuth();
+  const [userId, setUserId] = useState<string | null>(null);
+  console.log("check userId", userId);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -40,40 +43,21 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
     const fetchPostData = async () => {
-      if (!user) return;
+      console.log("check userId call", userId);
+
+      if (!userId) return;
 
       setLoading(true);
       try {
-        const data = await getPostsService(page);
+        const data = await getPostsServiceByUser(page, 5, userId);
+        console.log("check get data", data);
 
-        if (data.length > 0) {
-          setPosts((prev) => [...prev, ...data]);
-        } else {
-          setHasMore(false);
-        }
-      } catch (err) {
-        setError("Không thể tải dữ liệu bài viết.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPostData();
-  }, [page]);
-
-  useEffect(() => {
-    const fetchPostData = async () => {
-      if (!user) return;
-
-      setLoading(true);
-      try {
-        const data = await getPostsService(1); // Gọi API với page = 1
-
-        if (data.length > 0) {
+        if (page === 1) {
           setPosts(data);
         } else {
-          setHasMore(false);
+          setPosts((prev) => [...prev, ...data]);
         }
+        setHasMore(data.length > 0);
       } catch (err) {
         setError("Không thể tải dữ liệu bài viết.");
       } finally {
@@ -82,7 +66,35 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     fetchPostData();
-  }, [user, isClickedHome]); // Chỉ gọi API khi user thay đổi
+  }, [page, userId, isClickedHome]);
+
+  //   useEffect(() => {
+  //     const fetchPostData = async () => {
+  //       if (!userId) return;
+
+  //       setLoading(true);
+  //       try {
+  //         const data = await getPostsServiceByUser(1, 5, userId); // Gọi API với page = 1
+
+  //         if (data.length > 0) {
+  //           setPosts(data);
+  //         } else {
+  //           setHasMore(false);
+  //         }
+  //       } catch (err) {
+  //         setError("Không thể tải dữ liệu bài viết.");
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+
+  //     fetchPostData();
+  //   }, [userId, isClickedHome]); // Chỉ gọi API khi user thay đổi
+  useEffect(() => {
+    if (!userId) return; // Đảm bảo `userId` luôn tồn tại trước khi fetch.
+    setPage(1);
+    setHasMore(true);
+  }, [userId]);
 
   const resetPosts = () => {
     setTimeout(() => {
@@ -126,7 +138,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [hasMore, loading]);
 
   return (
-    <PostContext.Provider
+    <UserPostContext.Provider
       value={{
         posts,
         loading,
@@ -136,15 +148,16 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
         hasMore,
         resetPosts,
         page,
+        setUserId,
       }}
     >
       {children}
-    </PostContext.Provider>
+    </UserPostContext.Provider>
   );
 };
 
-export const usePosts = () => {
-  const context = useContext(PostContext);
+export const useUserPosts = () => {
+  const context = useContext(UserPostContext);
   if (!context) {
     throw new Error("usePosts must be used within a PostProvider");
   }

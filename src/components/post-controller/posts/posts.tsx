@@ -1,9 +1,12 @@
 import { CircularProgress, Typography, Fade } from "@mui/material";
 import { usePosts } from "../../../contexts";
 import { Post } from "../post";
-
-export const Posts = () => {
-  const { posts, loading, error, updatePost, hasMore } = usePosts();
+import { PostType } from "../../../model/user-profile.model";
+type PostProps = {
+  posts: PostType[];
+};
+export const Posts: React.FC<PostProps> = ({ posts }) => {
+  const { loading, error, updatePost, hasMore } = usePosts();
 
   if (loading && posts.length === 0) {
     return (

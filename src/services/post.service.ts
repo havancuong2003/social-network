@@ -50,3 +50,23 @@ export const changeReaction = async (data: any) => {
     throw new Error("An error occurred during the add comment service process");
   }
 };
+
+export const getPostsServiceByUser = async (
+  page: number,
+  limit: number = 5,
+  userId: string
+) => {
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const response = await axiosConfig.get(`/api/post/${userId}`, {
+      params: { page, limit }, // Gửi query params
+    });
+
+    return response.data; // Trả về danh sách bài viết
+  } catch (error: any) {
+    console.error("Error during get post service:", error);
+    throw new Error(
+      error.response?.data?.message || "An error occurred during fetching posts"
+    );
+  }
+};

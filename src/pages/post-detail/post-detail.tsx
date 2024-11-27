@@ -6,6 +6,7 @@ import { handleAddComment, handleReaction } from "../../utils";
 import CloseIcon from "@mui/icons-material/Close";
 import clsx from "clsx";
 import { PostType } from "../../model/user-profile.model";
+import { useAuth } from "../../contexts";
 
 type PostDetailProps = {
   classes?: {
@@ -52,7 +53,8 @@ export const PostDetail: React.FC<PostDetailProps> = ({
     }
   };
 
-  const userId = localStorage.getItem("user");
+  const { user } = useAuth();
+  const userId = user ? user._id : null;
 
   return (
     <>
@@ -226,7 +228,7 @@ export const PostDetail: React.FC<PostDetailProps> = ({
                   <button
                     className="px-4 py-2 bg-blue-500 text-white rounded-md"
                     onClick={() =>
-                      handleAddComment(inputRef, post, handleUpdatePost)
+                      handleAddComment(inputRef, post, handleUpdatePost, user)
                     }
                   >
                     Gửi

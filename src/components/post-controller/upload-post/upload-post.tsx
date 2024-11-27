@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineFile } from "react-icons/ai";
-import { UserProfile } from "../../../model/user-profile.model";
+import { UserType } from "../../../model/user-profile.model";
 import { FilePreview } from "../../file-preview";
 
 type UploadPostProps = {
-  userData: UserProfile;
+  userData: UserType;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
@@ -91,13 +91,11 @@ export const UploadPost: React.FC<UploadPostProps> = ({
             <h3 className="text-lg font-bold text-center">Tạo bài viết</h3>
             <div className="flex items-center mt-4">
               <img
-                src={userData?.profileImages.avatar}
+                src={userData?.profilePic}
                 alt="avatar"
                 className="w-16 h-16 lg:rounded-full"
               />
-              <h6 className="ml-4 font-bold">
-                {`${userData.personalInfo.firstName} ${userData.personalInfo.lastName}`}
-              </h6>
+              <h6 className="ml-4 font-bold">{`${userData.fullName}`}</h6>
             </div>
           </div>
 
