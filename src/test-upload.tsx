@@ -16,7 +16,6 @@ const FileUpload = () => {
 
     try {
       // check length form data
-      console.log("formData", formData.entries().next());
       const response = await axios.post(
         "http://localhost:5000/api/upload",
         formData,

@@ -12,7 +12,6 @@ export const loginService = async (username: string, password: string) => {
 
     // Xử lý dữ liệu trả về khi đăng nhập thành công
     const userData = response.data;
-    console.log("User data:", userData._id);
 
     // Bạn có thể lưu thông tin người dùng vào localStorage, context hoặc state tùy theo nhu cầu
     localStorage.setItem("user", userData._id); // Lưu thông tin người dùng vào localStorage

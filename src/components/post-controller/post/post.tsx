@@ -170,7 +170,8 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
                 setSelectedReaction,
                 "❤️",
                 postShow,
-                userId
+                userId,
+                handleUpdatePost
               )
             }
           >

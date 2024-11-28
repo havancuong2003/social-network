@@ -13,11 +13,7 @@ import { UserPostProvider } from "./contexts/user-post.context";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Layout>
-        <Home />
-      </Layout>
-    ),
+    element: <Home />,
   },
   {
     path: "/user/:id",

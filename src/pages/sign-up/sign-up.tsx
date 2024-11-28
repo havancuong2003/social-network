@@ -17,11 +17,10 @@ export const SignUp = () => {
     },
   });
 
-  const { signUp, loading } = useAuth();
+  const { signUp } = useAuth();
 
   const onSubmit: SubmitHandler<SignUpType> = async (data) => {
     try {
-      
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const isSignUpSuccess = await signUp(data);
 

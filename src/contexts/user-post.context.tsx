@@ -35,7 +35,6 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
   const isFirstRender = useRef(true);
   const [isClickedHome, setIsClickedHome] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
-  console.log("check userId", userId);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -43,14 +42,12 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
     const fetchPostData = async () => {
-      console.log("check userId call", userId);
 
       if (!userId) return;
 
       setLoading(true);
       try {
         const data = await getPostsServiceByUser(page, 5, userId);
-        console.log("check get data", data);
 
         if (page === 1) {
           setPosts(data);

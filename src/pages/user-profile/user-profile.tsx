@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { FaTimes } from "react-icons/fa";
-import { Post, Posts, UploadPost } from "../../components"; // Import component Post
-import { uploadPost } from "../../services/post.service";
+import { Posts, UploadPost } from "../../components"; // Import component Post
 import { useParams } from "react-router-dom";
 import { getUserData } from "../../services/user.service";
 import { UserType } from "../../model/user-profile.model";
-import { usePosts } from "../../contexts";
 import { useUserPosts } from "../../contexts/user-post.context";
-import { set } from "ramda";
 
 type UserProfileProps = {
   classes?: {
@@ -16,26 +13,21 @@ type UserProfileProps = {
   };
 };
 
-type FileType = File; // Kiểu cho file
-
 export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showCoverModal, setShowCoverModal] = useState(false);
-  const [files, setFiles] = useState<FileType[]>([]);
-  const [fileError, setFileError] = useState<string>("");
-  const [textValue, setTextValue] = useState("");
+
   const [error, setError] = useState<string | null>(null);
 
   const [userData, setUserData] = useState<UserType>({} as UserType);
   const { id } = useParams();
-  const { posts, setUserId } = useUserPosts();
+  const { posts, setUserId, updatePost } = useUserPosts();
   useEffect(() => {
     if (id) {
       // Cập nhật trạng thái ở đây
       setUserId(id); // Hoặc bất kỳ cập nhật nào khác
     }
   }, [id]);
-  console.log("posts", posts, id);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -78,48 +70,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   if (!userData) {
     return <div className="text-center">Loading...</div>;
   }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files);
-
-    const selectedFiles = Array.from(e.target.files || []);
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/jpg",
-      "video/mp4",
-      "video/mov",
-    ];
-    const invalidFiles = selectedFiles.filter(
-      (file) => !allowedTypes.includes(file.type)
-    );
-
-    if (invalidFiles.length > 0) {
-      setFileError(
-        "Chỉ chấp nhận tệp hình ảnh (JPEG, PNG) và video (MP4, MOV)."
-      );
-    } else {
-      setFileError("");
-      setFiles(selectedFiles);
-    }
-  };
-
-  const handlePostSubmit = async () => {
-    const formData = new FormData();
-
-    if (files && files.length > 0) {
-      files.forEach((file) => formData.append("media", file)); // Append từng file vào FormData
-    }
-
-    formData.append("text", textValue); // Append text
-
-    try {
-      const response = await uploadPost(formData); // Gửi formData lên server
-      console.log("response data", response);
-    } catch (error) {
-      console.error("Error during post submit:", error);
-    }
-  };
 
   return (
     <>
@@ -176,21 +126,12 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
               {/* {userData?.posts?.map((post: any) => (
                 <Post key={post.postId} postId={post.postId} />
               ))} */}
-              <Posts posts={posts} />
+              <Posts posts={posts} updatePost={updatePost} />
             </div>
           </div>
 
           {/* Modal up post */}
-          <UploadPost
-            userData={userData}
-            handleFileChange={handleFileChange}
-            files={files}
-            fileError={fileError}
-            handlePostSubmit={handlePostSubmit}
-            setTextValue={setTextValue}
-            setFiles={setFiles}
-            textValue={textValue}
-          />
+          <UploadPost userData={userData} />
 
           {/* Avatar Modal */}
           {showAvatarModal && (

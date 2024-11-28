@@ -2,30 +2,20 @@ import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineFile } from "react-icons/ai";
 import { UserType } from "../../../model/user-profile.model";
 import { FilePreview } from "../../file-preview";
+import { uploadPost } from "../../../services/post.service";
 
 type UploadPostProps = {
   userData: UserType;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  files: File[];
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
-  fileError: string;
-  handlePostSubmit: () => void;
-  setTextValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const UploadPost: React.FC<UploadPostProps> = ({
-  userData,
-  handleFileChange,
-  files,
-  fileError,
-  handlePostSubmit,
-  setTextValue,
-  setFiles,
-}) => {
+export const UploadPost: React.FC<UploadPostProps> = ({ userData }) => {
   const inputRef = useRef<HTMLDivElement | null>(null); // Tham chiếu tới div
   const [fileURLs, setFileURLs] = useState<string[]>([]); // Lưu trữ URL của các file để tránh việc tải lại video
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Trạng thái của modal
-
+  const [loading, setLoading] = useState<boolean>(false); // Trạng thái của loading
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string>("");
+  const [textValue, setTextValue] = useState("");
   const handleOpenModal = () => {
     setIsModalOpen(true); // Mở modal
   };
@@ -70,6 +60,54 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   // Chỉ lấy tối đa 10 file để hiển thị
   const displayedFiles = files.slice(0, 6);
   const remainingFilesCount = files.length - 6;
+
+  const handlePostSubmit = async () => {
+    const formData = new FormData();
+
+    if (files && files.length > 0) {
+      files.forEach((file) => formData.append("media", file)); // Append từng file vào FormData
+    }
+
+    formData.append("text", textValue); // Append text
+
+    try {
+      setLoading(true);
+      const response = await uploadPost(formData); // Gửi formData lên server
+      setLoading(false);
+      setFiles([]); // Xóa tệp
+      setTextValue("");
+      setIsModalOpen(false);
+      document.getElementById("my_modal_6")?.click();
+    } catch (error) {
+      console.error("Error during post submit:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files);
+
+    const selectedFiles = Array.from(e.target.files || []);
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "video/mp4",
+      "video/mov",
+    ];
+    const invalidFiles = selectedFiles.filter(
+      (file) => !allowedTypes.includes(file.type)
+    );
+
+    if (invalidFiles.length > 0) {
+      setFileError(
+        "Chỉ chấp nhận tệp hình ảnh (JPEG, PNG) và video (MP4, MOV)."
+      );
+    } else {
+      setFileError("");
+      setFiles(selectedFiles);
+    }
+  };
 
   return (
     <>
@@ -205,12 +243,19 @@ export const UploadPost: React.FC<UploadPostProps> = ({
           {/* Nút đóng và Đăng bài */}
           <div className="modal-action flex justify-between w-full">
             {/* Nút Đăng bài bên trái */}
-            <button
-              className="btn btn-primary text-white"
-              onClick={handlePostSubmit}
-            >
-              Đăng bài
-            </button>
+            {loading ? (
+              <button className="btn btn-primary text-white" disabled>
+                Đang tải...
+              </button>
+            ) : (
+              <button
+                className="btn btn-primary text-white"
+                onClick={handlePostSubmit}
+                disabled={loading}
+              >
+                Đăng bài
+              </button>
+            )}
 
             {/* Nút đóng bên phải */}
             <label htmlFor="my_modal_6" className="btn">

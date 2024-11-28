@@ -8,8 +8,6 @@ export const handleAddComment = async (
   handleUpdatePost: (updatedPost: PostType) => void,
   user: UserType | null
 ) => {
-  console.log("check user", user);
-
   if (post && inputRef.current) {
     const newComment = {
       _id: new Date().toISOString(),
@@ -23,8 +21,7 @@ export const handleAddComment = async (
       postId: post.postId,
       text: inputRef.current.innerHTML,
     };
-    const databack = await addComment(data);
-    console.log("databack", databack);
+    await addComment(data);
 
     const updatedPost = {
       ...post,
@@ -56,19 +53,25 @@ export const handleReaction = async (
   setSelectedReaction: React.Dispatch<React.SetStateAction<string | null>>,
   reaction: string,
   post: PostType,
-  userId: string
+  userId: string,
+  handleUpdatePost: (updatedPost: PostType) => void
 ) => {
   const newReaction = selectedReaction === reaction ? null : reaction;
-  console.log("aaaaaa");
 
   // Cập nhật trạng thái reaction ở frontend
   setSelectedReaction(newReaction);
+  const updatedPost = {
+    ...post,
+    tymedBy: newReaction
+      ? [...post.tymedBy, userId]
+      : post.tymedBy.filter((id) => id !== userId),
+  };
 
-  const dataBack = await changeReaction({
+  handleUpdatePost(updatedPost);
+
+  await changeReaction({
     postId: post.postId,
     reaction: newReaction,
     userId: userId,
   });
-
-  console.log("dataBack", dataBack);
 };

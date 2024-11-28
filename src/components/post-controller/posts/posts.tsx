@@ -4,9 +4,10 @@ import { Post } from "../post";
 import { PostType } from "../../../model/user-profile.model";
 type PostProps = {
   posts: PostType[];
+  updatePost: (updatedPost: PostType) => void;
 };
-export const Posts: React.FC<PostProps> = ({ posts }) => {
-  const { loading, error, updatePost, hasMore } = usePosts();
+export const Posts: React.FC<PostProps> = ({ posts, updatePost }) => {
+  const { loading, error, hasMore } = usePosts();
 
   if (loading && posts.length === 0) {
     return (
