@@ -6,15 +6,14 @@ import { Home, Login, PostDetail, SignUp, UserProfile } from "./pages";
 import { Layout } from "./layout";
 import TextSubmitComponent from "./pages/test";
 
+import { PostProvider } from "./contexts/post-context";
+import { UserMediaContextProvider, UserProvider } from "./contexts";
+import { UserPostProvider } from "./contexts/user-post.context";
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Layout>
-        {" "}
-        <Home />
-      </Layout>
-    ),
+    element: <Home />,
   },
   {
     path: "/user/:id",
@@ -48,6 +47,14 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <UserProvider>
+      <UserPostProvider>
+        <UserMediaContextProvider>
+          <PostProvider>
+            <RouterProvider router={router} />
+          </PostProvider>
+        </UserMediaContextProvider>
+      </UserPostProvider>
+    </UserProvider>
   </React.StrictMode>
 );

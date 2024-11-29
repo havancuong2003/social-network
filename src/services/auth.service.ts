@@ -4,9 +4,6 @@ import { SignUpType } from "../model/login-signup.model";
 
 export const loginService = async (username: string, password: string) => {
   try {
-    console.log("axios config", axiosConfig);
-    console.log(import.meta.env.VITE_BACKEND_URL);
-
     // Gửi yêu cầu đăng nhập đến backend
     const response = await axiosConfig.post("/api/auth/login", {
       userName: username,
@@ -15,10 +12,9 @@ export const loginService = async (username: string, password: string) => {
 
     // Xử lý dữ liệu trả về khi đăng nhập thành công
     const userData = response.data;
-    console.log("User data:", userData);
 
     // Bạn có thể lưu thông tin người dùng vào localStorage, context hoặc state tùy theo nhu cầu
-    localStorage.setItem("user", JSON.stringify(userData)); // Lưu thông tin người dùng vào localStorage
+    localStorage.setItem("user", userData._id); // Lưu thông tin người dùng vào localStorage
 
     return userData; // Trả về dữ liệu người dùng nếu cần sử dụng ở nơi khác trong app
   } catch (error) {

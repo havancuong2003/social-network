@@ -1,34 +1,29 @@
 import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineFile } from "react-icons/ai";
-import { UserProfile } from "../../../model/user-profile.model";
+import { UserType } from "../../../model/user-profile.model";
 import { FilePreview } from "../../file-preview";
+import { uploadPost } from "../../../services/post.service";
+import { usePosts } from "../../../contexts";
+import { useUserPosts } from "../../../contexts/user-post.context";
 
 type UploadPostProps = {
-  userData: UserProfile;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  files: File[];
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
-  fileError: string;
-  handlePostSubmit: () => void;
-  setTextValue: React.Dispatch<React.SetStateAction<string>>;
+  userData: UserType;
 };
 
-export const UploadPost: React.FC<UploadPostProps> = ({
-  userData,
-  handleFileChange,
-  files,
-  fileError,
-  handlePostSubmit,
-  setTextValue,
-  setFiles,
-}) => {
+export const UploadPost: React.FC<UploadPostProps> = ({ userData }) => {
   const inputRef = useRef<HTMLDivElement | null>(null); // Tham chiếu tới div
   const [fileURLs, setFileURLs] = useState<string[]>([]); // Lưu trữ URL của các file để tránh việc tải lại video
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // Trạng thái của modal
-
+  const [loading, setLoading] = useState<boolean>(false); // Trạng thái của loading
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState<string>("");
+  const [textValue, setTextValue] = useState("");
   const handleOpenModal = () => {
     setIsModalOpen(true); // Mở modal
   };
+
+  const { createPostGlobal } = usePosts();
+  const { createPost } = useUserPosts();
 
   // Hàm đóng modal
   const handleCloseModal = () => {
@@ -52,7 +47,13 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   }, [files]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLDivElement>) => {
-    setTextValue(e.target.innerText); // Cập nhật giá trị của div có thể chỉnh sửa
+    // Replace line breaks with <br/> tags
+    const formattedText = e.target.innerText
+      .split("\n")
+      .filter((line) => line.trim() !== "")
+      .join("<br/>");
+
+    setTextValue(formattedText);
   };
 
   // Điều chỉnh chiều cao của div khi nhập liệu
@@ -64,6 +65,56 @@ export const UploadPost: React.FC<UploadPostProps> = ({
   // Chỉ lấy tối đa 10 file để hiển thị
   const displayedFiles = files.slice(0, 6);
   const remainingFilesCount = files.length - 6;
+
+  const handlePostSubmit = async () => {
+    const formData = new FormData();
+
+    if (files && files.length > 0) {
+      files.forEach((file) => formData.append("media", file)); // Append từng file vào FormData
+    }
+
+    formData.append("text", textValue); // Append text
+
+    try {
+      setLoading(true);
+      const response = await uploadPost(formData); // Gửi formData lên server
+
+      createPostGlobal(response);
+      createPost(response);
+      setLoading(false);
+      setFiles([]); // Xóa tệp
+      setTextValue("");
+      setIsModalOpen(false);
+      document.getElementById("my_modal_6")?.click();
+    } catch (error) {
+      console.error("Error during post submit:", error);
+      setLoading(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    const selectedFiles = Array.from(e.target.files || []);
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "video/mp4",
+      "video/mov",
+    ];
+    const invalidFiles = selectedFiles.filter(
+      (file) => !allowedTypes.includes(file.type)
+    );
+
+    if (invalidFiles.length > 0) {
+      setFileError(
+        "Chỉ chấp nhận tệp hình ảnh (JPEG, PNG) và video (MP4, MOV)."
+      );
+    } else {
+      setFileError("");
+      setFiles(selectedFiles);
+    }
+  };
 
   return (
     <>
@@ -85,13 +136,11 @@ export const UploadPost: React.FC<UploadPostProps> = ({
             <h3 className="text-lg font-bold text-center">Tạo bài viết</h3>
             <div className="flex items-center mt-4">
               <img
-                src={userData?.profileImages.avatar}
+                src={userData?.profilePic}
                 alt="avatar"
                 className="w-16 h-16 lg:rounded-full"
               />
-              <h6 className="ml-4 font-bold">
-                {`${userData.personalInfo.firstName} ${userData.personalInfo.lastName}`}
-              </h6>
+              <h6 className="ml-4 font-bold">{`${userData.fullName}`}</h6>
             </div>
           </div>
 
@@ -105,12 +154,19 @@ export const UploadPost: React.FC<UploadPostProps> = ({
           >
             {/* Input */}
             <div
-              ref={inputRef} // Gắn tham chiếu vào div
+              ref={inputRef}
               className="w-full p-2 border rounded-md resize-none border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               contentEditable
               onInput={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  document.execCommand("insertLineBreak");
+                  e.preventDefault();
+                }
+              }}
               style={{
-                height: "auto", // Đặt lại để auto-resize hoạt động
+                height: "auto",
+                whiteSpace: "pre-wrap",
               }}
             />
 
@@ -194,12 +250,19 @@ export const UploadPost: React.FC<UploadPostProps> = ({
           {/* Nút đóng và Đăng bài */}
           <div className="modal-action flex justify-between w-full">
             {/* Nút Đăng bài bên trái */}
-            <button
-              className="btn btn-primary text-white"
-              onClick={handlePostSubmit}
-            >
-              Đăng bài
-            </button>
+            {loading ? (
+              <button className="btn btn-primary text-white" disabled>
+                Đang tải...
+              </button>
+            ) : (
+              <button
+                className="btn btn-primary text-white"
+                onClick={handlePostSubmit}
+                disabled={loading}
+              >
+                Đăng bài
+              </button>
+            )}
 
             {/* Nút đóng bên phải */}
             <label htmlFor="my_modal_6" className="btn">

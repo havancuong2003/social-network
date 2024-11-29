@@ -1,7 +1,7 @@
 .containerUserProfile {
   display: flex; /* Kích hoạt Flexbox */
   width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng */
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .postPersonal {
@@ -14,7 +14,6 @@
 .infoPersonal {
   flex: 35%; /* Chiếm 35% không gian */
 
-  padding: 10px;
   box-sizing: border-box;
   position: sticky; /* Sử dụng sticky */
   top: 0; /* Dính ở trên cùng khi cuộn */

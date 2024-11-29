@@ -7,12 +7,15 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { logoutService } from "../../services/auth.service";
+import { useAuth } from "../../contexts";
+import { useNavigate } from "react-router-dom";
 
 interface SideBarProps {
   isOpen: boolean;
 }
 
 export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
+  const navigate = useNavigate();
   const handleRedirect = () => {
     // Điều hướng đến URL ngoài ứng dụng
     window.location.href = "https://test-chat-frontend.vercel.app/";
@@ -20,8 +23,7 @@ export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
 
   const handleLogout = async () => {
     window.localStorage.removeItem("user");
-    const data = await logoutService();
-    console.log(data);
+    await logoutService();
 
     window.location.href = "/login";
   };
@@ -41,6 +43,7 @@ export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+  const { user } = useAuth();
 
   return (
     <>
@@ -54,14 +57,17 @@ export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
         ${isOpen ? "w-64" : "w-0"} 
         md:block md:w-64 bg-white text-gray-800 overflow-hidden`}
       >
-        <div className="flex items-center space-x-4 mb-6 mt-20">
+        <div
+          className="flex items-center space-x-4 mb-6 mt-20 cursor-pointer hover:bg-gray-300 rounded-2xl p-4 border border-gray-300"
+          onClick={() => navigate(`/user/${user?._id}`)}
+        >
           <img
-            src="https://via.placeholder.com/50" // Thay bằng URL avatar thực tế
+            src={user?.profilePic} // Thay bằng URL avatar thực tế
             alt="User Avatar"
             className="w-12 h-12 rounded-full"
           />
           <div>
-            <h2 className="text-lg font-semibold">Tên Người Dùng</h2>
+            <h2 className="text-lg font-semibold">{user?.fullName}</h2>
           </div>
         </div>
 

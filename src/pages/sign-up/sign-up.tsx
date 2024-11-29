@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { signUpSchema, SignUpType } from "../../model/login-signup.model";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signUpService } from "../../services/auth.service";
+import { useAuth } from "../../contexts";
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -17,13 +17,14 @@ export const SignUp = () => {
     },
   });
 
+  const { signUp } = useAuth();
+
   const onSubmit: SubmitHandler<SignUpType> = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      const userData = await signUpService(data);
-      console.log("userData", userData);
+      const isSignUpSuccess = await signUp(data);
 
-      if (userData) {
+      if (isSignUpSuccess) {
         navigate("/login");
       }
     } catch (error) {}

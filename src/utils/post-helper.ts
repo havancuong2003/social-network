@@ -1,39 +1,37 @@
-import { PostType } from "../model/user-profile.model";
+import { PostType, UserType } from "../model/user-profile.model";
+import { addComment, changeReaction } from "../services/post.service";
 
 // handleAddComment.ts
-export const handleAddComment = (
+export const handleAddComment = async (
   inputRef: React.RefObject<HTMLDivElement>,
   post: PostType | null,
-  setPost: React.Dispatch<React.SetStateAction<PostType | null>>
+  handleUpdatePost: (updatedPost: PostType) => void,
+  user: UserType | null
 ) => {
-  if (inputRef.current && post) {
-    const rawText = inputRef.current.innerText;
-    const formattedText = rawText.replace(/\n/g, "<br />");
+  if (post && inputRef.current) {
+    const newComment = {
+      _id: new Date().toISOString(),
+      userAvatar: user?.profilePic || "",
+      userName: user?.fullName || "Unknown User", // Provide a default value
+      text: inputRef.current.innerHTML,
+      date: new Date().toLocaleString(),
+      userId: user?._id || "", // Ensure userId is a string, fallback to an empty string if undefined
+    };
+    const data = {
+      postId: post.postId,
+      text: inputRef.current.innerHTML,
+    };
+    await addComment(data);
 
-    if (formattedText.trim()) {
-      const newCommentObj = {
-        commentId: String(Math.random()),
-        userId: "currentUserId",
-        userName: "Bạn",
-        userAvatar: "/default-avatar.png",
-        text: formattedText,
-        date: new Date().toLocaleString(),
-      };
+    const updatedPost = {
+      ...post,
+      comments: [...post.comments, newComment], // Add the new comment
+    };
 
-      setPost((prevPost) =>
-        prevPost
-          ? {
-              ...prevPost,
-              comments: [...prevPost.comments, newCommentObj],
-            }
-          : null
-      );
-
-      inputRef.current.innerText = "";
-    }
+    handleUpdatePost(updatedPost); // Update the post in the parent component
+    inputRef.current.innerHTML = ""; // Clear the input after adding the comment
   }
 };
-
 // handleFocusComment.ts
 export const handleFocusComment = (
   inputRef: React.RefObject<HTMLDivElement>
@@ -50,10 +48,37 @@ export const handleFocusComment = (
 };
 
 // handleReaction.ts
-export const handleReaction = (
+export const handleReaction = async (
   selectedReaction: string | null,
   setSelectedReaction: React.Dispatch<React.SetStateAction<string | null>>,
-  reaction: string
+  reaction: string,
+  post: PostType,
+  userProfile: UserType | null,
+  handleUpdatePost: (updatedPost: PostType) => void
 ) => {
-  setSelectedReaction(selectedReaction === reaction ? null : reaction);
+  const newReaction = selectedReaction === reaction ? null : reaction;
+
+  // Cập nhật trạng thái reaction ở frontend
+  setSelectedReaction(newReaction);
+  const updatedPost = {
+    ...post,
+    tymedBy: newReaction
+      ? [
+          ...post.tymedBy,
+          {
+            _id: userProfile?._id || "",
+            fullName: userProfile?.fullName || "Unknown User", // Ensure fullName is a string
+            profilePic: userProfile?.profilePic || "", // Provide a default value for profilePic
+          },
+        ]
+      : post.tymedBy.filter((user) => user._id !== userProfile?._id || ""),
+  };
+
+  handleUpdatePost(updatedPost);
+
+  await changeReaction({
+    postId: post.postId,
+    reaction: newReaction,
+    userId: userProfile?._id,
+  });
 };

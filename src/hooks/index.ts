@@ -1,1 +1,1 @@
-export * from "./use-fetch-post";
+export * from "./use-post.ts";

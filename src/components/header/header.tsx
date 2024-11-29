@@ -17,6 +17,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
+import { usePosts } from "../../contexts";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -64,6 +65,7 @@ export function Header({
   onSidebarToggle: () => void;
   isOpen: boolean;
 }) {
+  const { resetPosts } = usePosts();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -162,7 +164,10 @@ export function Header({
     </Menu>
   );
   const navigate = useNavigate();
-
+  const handleGoHome = () => {
+    navigate("/");
+    resetPosts();
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -187,10 +192,7 @@ export function Header({
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block" }, cursor: "pointer" }}
-            onClick={() => {
-              navigate("/", { replace: true }); // Điều hướng về trang Home
-              window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn mượt lên đầu trang
-            }}
+            onClick={handleGoHome}
           >
             MUI
           </Typography>

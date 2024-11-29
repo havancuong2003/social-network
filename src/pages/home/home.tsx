@@ -1,11 +1,37 @@
-import { Posts } from "../../components";
+import { useEffect, useState } from "react";
+import { Posts, SideBar } from "../../components";
+import { usePosts } from "../../contexts";
+import { Layout } from "../../layout";
 
 export const Home = () => {
+  const { posts, updatePost } = usePosts();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleSidebarToggle = () => setSidebarOpen((prev) => !prev);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
-      <div className="">
-        <Posts />
-      </div>
+      <Layout
+        isSidebarOpen={isSidebarOpen}
+        handleSidebarToggle={handleSidebarToggle}
+      >
+        <SideBar isOpen={isSidebarOpen} />
+        <div className="lg:w-1/2">
+          <Posts posts={posts} updatePost={updatePost} />
+        </div>
+      </Layout>
     </>
   );
 };
