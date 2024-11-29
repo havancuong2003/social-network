@@ -1,0 +1,32 @@
+.containerUserProfile {
+  display: flex; /* Kích hoạt Flexbox */
+  width: 100%; /* Đảm bảo container chiếm toàn bộ chiều rộng */
+  margin-top: 50px;
+}
+
+.postPersonal {
+  flex: 65%; /* Chiếm 65% không gian */
+  background-color: #f4f4f4;
+  padding: 10px;
+  box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng đến kích thước */
+}
+
+.infoPersonal {
+  flex: 35%; /* Chiếm 35% không gian */
+
+  padding: 10px;
+  box-sizing: border-box;
+  position: sticky; /* Sử dụng sticky */
+  top: 0; /* Dính ở trên cùng khi cuộn */
+  height: calc(100vh - 20px); /* Chiều cao tối đa của div, nếu cần điều chỉnh */
+}
+
+@media screen and (max-width: 768px) {
+  .containerUserProfile {
+    display: block;
+  }
+  .infoPersonal {
+    position: relative;
+    height: auto;
+  }
+}

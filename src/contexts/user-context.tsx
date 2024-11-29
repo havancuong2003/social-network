@@ -14,6 +14,8 @@ interface UserContextType {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
   signUp: (data: SignUpType) => Promise<boolean>;
+  userIdProfile: string | null;
+  setUserIdProfile: React.Dispatch<React.SetStateAction<string | null>>;
 }
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -28,7 +30,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   // Lấy user từ localStorage khi component mount
-
+  const [userIdProfile, setUserIdProfile] = useState<string | null>(null);
   const login = async (username: string, password: string) => {
     try {
       setLoading(true);
@@ -75,7 +77,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   };
   return (
     <UserContext.Provider
-      value={{ user, setUser, loading, error, login, logout, signUp }}
+      value={{
+        user,
+        setUser,
+        loading,
+        error,
+        login,
+        logout,
+        signUp,
+        userIdProfile,
+        setUserIdProfile,
+      }}
     >
       {children}
     </UserContext.Provider>
