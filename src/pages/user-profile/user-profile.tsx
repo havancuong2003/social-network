@@ -11,8 +11,8 @@ import { useParams } from "react-router-dom";
 import { getUserData } from "../../services/user.service";
 import { UserType } from "../../model/user-profile.model";
 import { useUserPosts } from "../../contexts/user-post.context";
-import { Divider, Tabs, Tab, Box } from "@mui/material";
-import { useAuth, useUserMedia } from "../../contexts";
+import { Tabs, Tab, Box } from "@mui/material";
+import { useAuth } from "../../contexts";
 
 type UserProfileProps = {
   classes?: {
@@ -27,16 +27,15 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserType>({} as UserType);
   const { id } = useParams();
-  const { posts, setUserId, updatePost, resetPosts } = useUserPosts();
-  const { setUserMediaId } = useUserMedia();
-  const { user, userIdProfile, setUserIdProfile } = useAuth();
+  const { posts, updatePost, resetPosts } = useUserPosts();
+  // const { setUserMediaId } = useUserMedia();
+  const { user, setUserIdProfile } = useAuth();
 
   const [selectedTab, setSelectedTab] = useState(0); // 0: Giới thiệu, 1: Ảnh và video, 2: Bạn bè
 
   useEffect(() => {
     if (id) {
-      setUserId(id);
-      setUserMediaId(id);
+      setUserIdProfile(id);
     }
   }, [id]);
 
@@ -70,6 +69,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
   }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    event.preventDefault();
     setSelectedTab(newValue); // Chuyển tab khi người dùng click
   };
 
@@ -95,12 +95,35 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
                 <img
                   src={userData.profilePic}
                   alt="Avatar"
-                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full border-4 border-white shadow-lg cursor-pointer active:opacity-80"
+                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full border-4 border-white shadow-lg cursor-pointer active:opacity-80 relative"
                   onClick={() => setShowAvatarModal(true)}
                 />
               </div>
             </div>
+            <div className=" text-center mt-10">
+              {user?._id === id ? (
+                <div>
+                  <span className="text-2xl font-bold ">
+                    {userData.fullName}
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-600 mb-10">Bạn đang xem hồ sơ của</p>
+                  <span className="text-2xl font-bold ">
+                    {userData.fullName}
+                  </span>
+                </div>
+              )}
+              <p className="text-gray-600">{userData.biography}</p>
+            </div>
 
+            {/* what are you thinking */}
+            <div
+              className={`${
+                user?._id === id ? "mt-2 border-t border-gray-300" : "hidden"
+              }`}
+            ></div>
             {/* Tabs for navigation */}
             <Box sx={{ width: "100%", marginTop: "70px" }}>
               <Tabs
@@ -147,8 +170,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
                 updatePost={updatePost}
               />
             )}
-            {selectedTab === 1 && <UserMedias />}
-            {selectedTab === 2 && <UserFriends />}
+            {selectedTab === 1 && <UserMedias userData={userData} id={id} />}
+            {selectedTab === 2 && <UserFriends userData={userData} id={id} />}
 
             {/* Modal up post */}
             <UploadPost userData={userData} />

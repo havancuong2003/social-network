@@ -78,7 +78,6 @@ export const UploadPost: React.FC<UploadPostProps> = ({ userData }) => {
     try {
       setLoading(true);
       const response = await uploadPost(formData); // Gửi formData lên server
-      console.log("response", response);
 
       createPostGlobal(response);
       createPost(response);
@@ -94,7 +93,6 @@ export const UploadPost: React.FC<UploadPostProps> = ({ userData }) => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files);
 
     const selectedFiles = Array.from(e.target.files || []);
     const allowedTypes = [

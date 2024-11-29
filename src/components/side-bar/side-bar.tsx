@@ -23,8 +23,7 @@ export const SideBar: React.FC<SideBarProps> = ({ isOpen }) => {
 
   const handleLogout = async () => {
     window.localStorage.removeItem("user");
-    const data = await logoutService();
-    console.log(data);
+    await logoutService();
 
     window.location.href = "/login";
   };

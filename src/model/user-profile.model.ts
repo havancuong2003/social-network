@@ -76,3 +76,8 @@ export interface UserTypeTymedBy {
   fullName: string;
   profilePic: string;
 }
+
+export interface UserMedia {
+  post: PostType;
+  mediaShow: string[];
+}

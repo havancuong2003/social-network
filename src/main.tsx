@@ -5,7 +5,7 @@ import "./index.css";
 import { Home, Login, PostDetail, SignUp, UserProfile } from "./pages";
 import { Layout } from "./layout";
 import TextSubmitComponent from "./pages/test";
-import FileUpload from "./test-upload";
+
 import { PostProvider } from "./contexts/post-context";
 import { UserMediaContextProvider, UserProvider } from "./contexts";
 import { UserPostProvider } from "./contexts/user-post.context";
@@ -42,11 +42,6 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp />,
-  },
-
-  {
-    path: "/upload",
-    element: <FileUpload />,
   },
 ]);
 

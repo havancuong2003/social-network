@@ -1,16 +1,18 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { getUserMedia } from "../services/user.service";
+import { useAuth } from "./user-context";
+import { UserMedia } from "../model/user-profile.model";
 
 interface UserMediaContextType {
-  media: string[];
-  setMedia: React.Dispatch<React.SetStateAction<string[]>>;
+  medias: UserMedia[];
+  setMedia: React.Dispatch<React.SetStateAction<UserMedia[]>>;
   loading: boolean;
   error: string | null;
   loadMore: () => void;
   hasMore: boolean;
   resetMedia: () => void;
   page: number;
-  setUserMediaId: React.Dispatch<React.SetStateAction<string | null>>;
+  // setUserMediaId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const UserMediaContext = createContext<UserMediaContextType | undefined>(
@@ -20,26 +22,24 @@ const UserMediaContext = createContext<UserMediaContextType | undefined>(
 export const UserMediaContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const [media, setMedia] = useState<string[]>([]);
+  const [medias, setMedia] = useState<UserMedia[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [userMediaId, setUserMediaId] = useState<string | null>(null);
+  const { userIdProfile } = useAuth();
   const firstInit = useRef(true);
   useEffect(() => {
     if (firstInit.current) {
       firstInit.current = false;
       return;
     }
-    console.log("aaaaa", userMediaId);
 
-    if (!userMediaId) return;
+    if (!userIdProfile) return;
     const mediaData = async () => {
       try {
         setLoading(true);
-        const response = await getUserMedia(userMediaId as string);
-        console.log("response", response);
+        const response = await getUserMedia(userIdProfile as string);
         if (page === 1) {
           setMedia(response);
         } else {
@@ -51,7 +51,7 @@ export const UserMediaContextProvider: React.FC<{
       }
     };
     mediaData();
-  }, [page, userMediaId]);
+  }, [page, userIdProfile]);
   const loadMore = () => {
     if (hasMore && !loading) {
       setPage((prev) => prev + 1);
@@ -66,7 +66,7 @@ export const UserMediaContextProvider: React.FC<{
   return (
     <UserMediaContext.Provider
       value={{
-        media,
+        medias,
         setMedia,
         loading,
         error,
@@ -74,7 +74,7 @@ export const UserMediaContextProvider: React.FC<{
         hasMore,
         resetMedia,
         page,
-        setUserMediaId,
+        //   setUserMediaId,
       }}
     >
       {children}

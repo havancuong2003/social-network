@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { PostType } from "../model/user-profile.model";
 import { getPostsServiceByUser } from "../services/post.service";
+import { useAuth } from "./user-context";
 
 interface UserPostContextType {
   posts: PostType[];
@@ -17,7 +18,7 @@ interface UserPostContextType {
   hasMore: boolean;
   resetPosts: () => void;
   page: number;
-  setUserId: React.Dispatch<React.SetStateAction<string | null>>;
+  //setUserId: React.Dispatch<React.SetStateAction<string | null>>;
   createPost: (newPost: PostType) => void;
 }
 
@@ -35,8 +36,8 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
   const [hasMore, setHasMore] = useState<boolean>(true);
   const isFirstRender = useRef(true);
   const [isClickedHome, setIsClickedHome] = useState<boolean>(false);
-  const [userId, setUserId] = useState<string | null>(null);
-
+  // const [userId, setUserId] = useState<string | null>(null);
+  const { userIdProfile } = useAuth();
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -44,20 +45,15 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     const fetchPostData = async () => {
-      if (!userId) return;
+      if (!userIdProfile) return;
 
       setLoading(true);
       try {
-        const data = await getPostsServiceByUser(page, 5, userId);
-        console.log("itsme", data);
+        const data = await getPostsServiceByUser(page, 5, userIdProfile);
 
         if (page === 1) {
-          console.log("page=1");
-
           setPosts(data);
         } else {
-          console.log("page>1");
-
           setPosts((prev) => [...prev, ...data]);
         }
         setHasMore(data.length > 0);
@@ -78,11 +74,11 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     const fetchPostData = async () => {
-      if (!userId) return;
+      if (!userIdProfile) return;
 
       setLoading(true);
       try {
-        const data = await getPostsServiceByUser(page, 5, userId);
+        const data = await getPostsServiceByUser(page, 5, userIdProfile);
 
         setPosts(data);
 
@@ -96,7 +92,6 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
 
     fetchPostData();
   }, []); // Chạy một lần khi component mount
-  console.log("posts", posts);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -104,14 +99,13 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
     const fetchPostData = async () => {
-      if (!userId) return;
+      if (!userIdProfile) return;
 
       setLoading(true);
       try {
-        const data = await getPostsServiceByUser(1, 5, userId);
+        const data = await getPostsServiceByUser(1, 5, userIdProfile);
 
         setPosts(data);
-        console.log("why i am  call", data);
 
         setHasMore(data.length > 0);
       } catch (err) {
@@ -122,7 +116,7 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     fetchPostData();
-  }, [userId]);
+  }, [userIdProfile]);
   //   useEffect(() => {
   //     const fetchPostData = async () => {
   //       if (!userId) return;
@@ -146,20 +140,16 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
   //     fetchPostData();
   //   }, [userId, isClickedHome]); // Chỉ gọi API khi user thay đổi
   useEffect(() => {
-    if (!userId) return; // Đảm bảo `userId` luôn tồn tại trước khi fetch.
+    if (!userIdProfile) return; // Đảm bảo `userId` luôn tồn tại trước khi fetch.
     setPage(1);
     setHasMore(true);
-  }, [userId]);
+  }, [userIdProfile]);
 
   const resetPosts = () => {
-    setTimeout(() => {
-      setPosts([]);
-      setPage(1);
-      setHasMore(true); // Đặt lại trạng thái có thêm bài viết
-      setIsClickedHome((pre) => !pre);
-    }, 0);
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setPosts([]);
+    setPage(1);
+    setHasMore(true); // Đặt lại trạng thái có thêm bài viết
+    setIsClickedHome((pre) => !pre);
   };
 
   const loadMore = () => {
@@ -207,7 +197,7 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
         hasMore,
         resetPosts,
         page,
-        setUserId,
+        // setUserId,
         createPost,
       }}
     >

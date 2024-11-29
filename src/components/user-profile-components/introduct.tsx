@@ -42,13 +42,14 @@ export const Introduct: React.FC<IntroductProps> = ({
   return (
     <div className={clsx(classes?.containerUserProfile)}>
       <div className={clsx(classes?.infoPersonal)}>
+        {/* Personal Info */}
+
         <Box
           sx={{
             p: 3,
             borderRadius: 2,
             boxShadow: 2,
             backgroundColor: "#f9f9f9",
-            mt: 5,
           }}
         >
           {/* Thông tin cơ bản */}
@@ -164,27 +165,6 @@ export const Introduct: React.FC<IntroductProps> = ({
         </Box>
       </div>
       <div className={clsx(classes?.postPersonal)}>
-        {/* Personal Info */}
-        <div className=" text-center">
-          {user?._id === id ? (
-            <div>
-              <span className="text-2xl font-bold ">{userData.fullName}</span>
-            </div>
-          ) : (
-            <div>
-              <p className="text-gray-600 mb-10">Bạn đang xem hồ sơ của</p>
-              <span className="text-2xl font-bold ">{userData.fullName}</span>
-            </div>
-          )}
-          <p className="text-gray-600">{userData.biography}</p>
-        </div>
-
-        {/* what are you thinking */}
-        <div
-          className={`${
-            user?._id === id ? "mt-10 border-t border-gray-300" : "hidden"
-          }`}
-        ></div>
         <div className="text-center my-10">
           <div className={`${user?._id === id ? "flex" : "hidden"}`}>
             <img
