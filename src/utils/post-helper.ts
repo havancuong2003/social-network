@@ -53,7 +53,7 @@ export const handleReaction = async (
   setSelectedReaction: React.Dispatch<React.SetStateAction<string | null>>,
   reaction: string,
   post: PostType,
-  userId: string,
+  userProfile: UserType | null,
   handleUpdatePost: (updatedPost: PostType) => void
 ) => {
   const newReaction = selectedReaction === reaction ? null : reaction;
@@ -63,8 +63,15 @@ export const handleReaction = async (
   const updatedPost = {
     ...post,
     tymedBy: newReaction
-      ? [...post.tymedBy, userId]
-      : post.tymedBy.filter((id) => id !== userId),
+      ? [
+          ...post.tymedBy,
+          {
+            _id: userProfile?._id || "",
+            fullName: userProfile?.fullName || "Unknown User", // Ensure fullName is a string
+            profilePic: userProfile?.profilePic || "", // Provide a default value for profilePic
+          },
+        ]
+      : post.tymedBy.filter((user) => user._id !== userProfile?._id || ""),
   };
 
   handleUpdatePost(updatedPost);
@@ -72,6 +79,6 @@ export const handleReaction = async (
   await changeReaction({
     postId: post.postId,
     reaction: newReaction,
-    userId: userId,
+    userId: userProfile?._id,
   });
 };

@@ -28,7 +28,9 @@ export const Home = () => {
         handleSidebarToggle={handleSidebarToggle}
       >
         <SideBar isOpen={isSidebarOpen} />
-        <Posts posts={posts} updatePost={updatePost} />
+        <div className="lg:w-1/2">
+          <Posts posts={posts} updatePost={updatePost} />
+        </div>
       </Layout>
     </>
   );

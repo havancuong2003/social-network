@@ -8,27 +8,48 @@ import { useNavigate } from "react-router-dom";
 import { PostDetail } from "../../../pages";
 import { PostType } from "../../../model/user-profile.model";
 import { useAuth } from "../../../contexts";
+import { Button, Divider, Tooltip } from "@mui/material";
+import { Modal, Box, Typography } from "@mui/material";
 
 interface PostProps {
   postShow: PostType | null;
   handleUpdatePost: (updatedPost: PostType) => void;
 }
 
+const modalStyle = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 4,
+};
+
 export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
   const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isOpen, setIsModalOpen] = useState(false); // State to manage modal visibility
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenTymModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseTymModal = () => {
+    setOpenModal(false);
+  };
   const navigate = useNavigate();
   //const userId = localStorage.getItem("user");
   const { user } = useAuth();
   const userId = user?._id;
 
-  // Cập nhật trạng thái liked khi nhận được dữ liệu từ post
   useEffect(() => {
     if (postShow && userId) {
       const hasLiked = postShow.tymedBy?.some(
-        (user) => user.toString() === userId
+        (user) => user._id === userId // So sánh _id của đối tượng với userId
       );
       setSelectedReaction(hasLiked ? "❤️" : null);
     }
@@ -154,6 +175,34 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
         )}
 
         {/* Phần tương tác */}
+        <div>
+          <Divider />
+          <div className="flex items-center mt-4 space-x-4">
+            {/* Số lượt tym với Tooltip */}
+            <Tooltip
+              title={
+                postShow?.tymedBy?.length
+                  ? postShow.tymedBy.map((user) => user.fullName).join(", ")
+                  : "Chưa có ai tym"
+              }
+              arrow
+              placement="top"
+            >
+              <div
+                className="font-semibold text-gray-700 cursor-pointer"
+                onClick={handleOpenTymModal}
+              >
+                {postShow?.tymedBy?.length || 0} tym
+              </div>
+            </Tooltip>
+
+            {/* Số bình luận */}
+            <div className="font-semibold text-gray-700">
+              {postShow?.comments.length} bình luận
+            </div>
+          </div>
+          <Divider />
+        </div>
         <div className="flex items-center mt-4">
           {/* Nút Thích */}
           <button
@@ -170,14 +219,13 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
                 setSelectedReaction,
                 "❤️",
                 postShow,
-                userId,
+                user,
                 handleUpdatePost
               )
             }
           >
             {selectedReaction === "❤️" ? "❤️" : "🤍"}
           </button>
-
           {/* Nút Bình luận */}
           <button
             className="px-4 py-2 bg-gray-200 rounded-md border border-gray-500 ml-2"
@@ -230,6 +278,39 @@ export const Post: React.FC<PostProps> = ({ postShow, handleUpdatePost }) => {
             </button>
           </div>
         </div>
+        {/* Modal to show users who liked the post */}
+        <Modal open={openModal} onClose={handleCloseTymModal}>
+          <Box sx={modalStyle}>
+            <Typography variant="h6" gutterBottom>
+              Những người đã thích bài viết:
+            </Typography>
+            {postShow?.tymedBy.length === 0 ? (
+              <Typography variant="body1" color="textSecondary">
+                Chưa có ai tym
+              </Typography>
+            ) : (
+              <div>
+                {postShow?.tymedBy.map((user) => (
+                  <div key={user._id} className="flex items-center py-2">
+                    <img
+                      src={user.profilePic}
+                      alt={user.fullName}
+                      className="w-8 h-8 rounded-full mr-2"
+                    />
+                    <span>{user.fullName}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <Button
+              onClick={handleCloseTymModal}
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              Đóng
+            </Button>
+          </Box>
+        </Modal>
       </div>
     </>
   );

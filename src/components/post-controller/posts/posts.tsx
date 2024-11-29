@@ -32,9 +32,15 @@ export const Posts: React.FC<PostProps> = ({ posts, updatePost }) => {
 
   return (
     <div>
-      {posts.map((post) => (
-        <Post key={post.postId} postShow={post} handleUpdatePost={updatePost} />
-      ))}
+      {posts.map((post) => {
+        return (
+          <Post
+            key={post.postId}
+            postShow={post}
+            handleUpdatePost={updatePost}
+          />
+        );
+      })}
 
       <div style={{ textAlign: "center", marginTop: "20px" }}>
         <Fade in={loading || !hasMore}>

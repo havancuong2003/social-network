@@ -25,7 +25,7 @@ export interface PostType {
   content: string; // Nội dung bài viết
   media: string[]; // Danh sách ảnh trong bài viết
   likes: number; // Số lượt thích
-  tymedBy: string[]; // Danh sách userId của những người đã thích bài viết
+  tymedBy: UserTypeTymedBy[]; // Danh sách userId của những người đã thích bài viết
   comments: CommentType[]; // Danh sách bình luận
 }
 
@@ -69,4 +69,10 @@ export interface UserType {
   createdAt?: Date;
   updatedAt?: Date;
   posts?: PostType[];
+}
+
+export interface UserTypeTymedBy {
+  _id: string;
+  fullName: string;
+  profilePic: string;
 }

@@ -3,6 +3,8 @@ import { AiOutlineFile } from "react-icons/ai";
 import { UserType } from "../../../model/user-profile.model";
 import { FilePreview } from "../../file-preview";
 import { uploadPost } from "../../../services/post.service";
+import { usePosts } from "../../../contexts";
+import { useUserPosts } from "../../../contexts/user-post.context";
 
 type UploadPostProps = {
   userData: UserType;
@@ -19,6 +21,9 @@ export const UploadPost: React.FC<UploadPostProps> = ({ userData }) => {
   const handleOpenModal = () => {
     setIsModalOpen(true); // Mở modal
   };
+
+  const { createPostGlobal } = usePosts();
+  const { createPost } = useUserPosts();
 
   // Hàm đóng modal
   const handleCloseModal = () => {
@@ -73,6 +78,10 @@ export const UploadPost: React.FC<UploadPostProps> = ({ userData }) => {
     try {
       setLoading(true);
       const response = await uploadPost(formData); // Gửi formData lên server
+      console.log("response", response);
+
+      createPostGlobal(response);
+      createPost(response);
       setLoading(false);
       setFiles([]); // Xóa tệp
       setTextValue("");

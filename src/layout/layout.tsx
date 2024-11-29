@@ -27,6 +27,7 @@ export const Layout = ({
 
   const { resetPosts } = usePosts();
   const handleFooterClick = () => {
+    
     resetPosts();
   };
 

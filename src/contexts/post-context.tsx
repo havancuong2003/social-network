@@ -18,6 +18,7 @@ interface PostContextType {
   hasMore: boolean;
   resetPosts: () => void;
   page: number;
+  createPostGlobal: (newPost: PostType) => void;
 }
 
 const PostContext = createContext<PostContextType | undefined>(undefined);
@@ -109,6 +110,10 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const createPostGlobal = (newPost: PostType) => {
+    setPosts((prevPosts) => [...prevPosts, newPost]);
+  };
+
   const handleScroll = () => {
     const scrollPosition = window.innerHeight + window.scrollY;
     const scrollHeight = document.documentElement.scrollHeight;
@@ -136,6 +141,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
         hasMore,
         resetPosts,
         page,
+        createPostGlobal,
       }}
     >
       {children}

@@ -18,6 +18,7 @@ interface UserPostContextType {
   resetPosts: () => void;
   page: number;
   setUserId: React.Dispatch<React.SetStateAction<string | null>>;
+  createPost: (newPost: PostType) => void;
 }
 
 const UserPostContext = createContext<UserPostContextType | undefined>(
@@ -41,17 +42,22 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
       isFirstRender.current = false;
       return;
     }
-    const fetchPostData = async () => {
 
+    const fetchPostData = async () => {
       if (!userId) return;
 
       setLoading(true);
       try {
         const data = await getPostsServiceByUser(page, 5, userId);
+        console.log("itsme", data);
 
         if (page === 1) {
+          console.log("page=1");
+
           setPosts(data);
         } else {
+          console.log("page>1");
+
           setPosts((prev) => [...prev, ...data]);
         }
         setHasMore(data.length > 0);
@@ -63,8 +69,60 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     fetchPostData();
-  }, [page, userId, isClickedHome]);
+  }, [page, isClickedHome]);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    const fetchPostData = async () => {
+      if (!userId) return;
+
+      setLoading(true);
+      try {
+        const data = await getPostsServiceByUser(page, 5, userId);
+
+        setPosts(data);
+
+        setHasMore(data.length > 0);
+      } catch (err) {
+        setError("Không thể tải dữ liệu bài viết.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPostData();
+  }, []); // Chạy một lần khi component mount
+  console.log("posts", posts);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const fetchPostData = async () => {
+      if (!userId) return;
+
+      setLoading(true);
+      try {
+        const data = await getPostsServiceByUser(1, 5, userId);
+
+        setPosts(data);
+        console.log("why i am  call", data);
+
+        setHasMore(data.length > 0);
+      } catch (err) {
+        setError("Không thể tải dữ liệu bài viết.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPostData();
+  }, [userId]);
   //   useEffect(() => {
   //     const fetchPostData = async () => {
   //       if (!userId) return;
@@ -99,7 +157,7 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
       setPage(1);
       setHasMore(true); // Đặt lại trạng thái có thêm bài viết
       setIsClickedHome((pre) => !pre);
-    }, 1000);
+    }, 0);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -116,6 +174,10 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
         post.postId === updatedPost.postId ? updatedPost : post
       )
     );
+  };
+
+  const createPost = (newPost: PostType) => {
+    setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
 
   const handleScroll = () => {
@@ -146,6 +208,7 @@ export const UserPostProvider: React.FC<{ children: React.ReactNode }> = ({
         resetPosts,
         page,
         setUserId,
+        createPost,
       }}
     >
       {children}
