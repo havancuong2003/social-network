@@ -100,7 +100,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
                 />
               </div>
             </div>
-            <div className=" text-center mt-10">
+            <div className=" text-center mt-5 ">
               {user?._id === id ? (
                 <div>
                   <span className="text-2xl font-bold ">
@@ -109,7 +109,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
                 </div>
               ) : (
                 <div>
-                  <p className="text-gray-600 mb-10">Bạn đang xem hồ sơ của</p>
+                  <p className="text-gray-600">Bạn đang xem hồ sơ của</p>
                   <span className="text-2xl font-bold ">
                     {userData.fullName}
                   </span>
@@ -119,13 +119,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({}) => {
             </div>
 
             {/* what are you thinking */}
-            <div
-              className={`${
-                user?._id === id ? "mt-2 border-t border-gray-300" : "hidden"
-              }`}
-            ></div>
+            <div className={`mt-2 border-t border-gray-300`}></div>
             {/* Tabs for navigation */}
-            <Box sx={{ width: "100%", marginTop: "70px" }}>
+            <Box className="w-full mt-[30px] md:mt-[10px]">
               <Tabs
                 value={selectedTab}
                 onChange={handleTabChange}

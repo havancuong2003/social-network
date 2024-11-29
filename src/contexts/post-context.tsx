@@ -34,7 +34,6 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
   const isFirstRender = useRef(true);
   const [isClickedHome, setIsClickedHome] = useState<boolean>(false);
   const { user } = useAuth();
-
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -91,7 +90,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
       setPage(1);
       setHasMore(true); // Đặt lại trạng thái có thêm bài viết
       setIsClickedHome((pre) => !pre);
-    }, 1000);
+    }, 200);
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

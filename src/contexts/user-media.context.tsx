@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { getUserMedia } from "../services/user.service";
 import { useAuth } from "./user-context";
-import { UserMedia } from "../model/user-profile.model";
+import { PostType, UserMedia } from "../model/user-profile.model";
 
 interface UserMediaContextType {
   medias: UserMedia[];
@@ -13,6 +13,7 @@ interface UserMediaContextType {
   resetMedia: () => void;
   page: number;
   // setUserMediaId: React.Dispatch<React.SetStateAction<string | null>>;
+  updatePostMedia: (updatedPost: PostType) => void;
 }
 
 const UserMediaContext = createContext<UserMediaContextType | undefined>(
@@ -27,6 +28,7 @@ export const UserMediaContextProvider: React.FC<{
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
+
   const { userIdProfile } = useAuth();
   const firstInit = useRef(true);
   useEffect(() => {
@@ -39,7 +41,7 @@ export const UserMediaContextProvider: React.FC<{
     const mediaData = async () => {
       try {
         setLoading(true);
-        const response = await getUserMedia(userIdProfile as string);
+        const response = await getUserMedia(userIdProfile, 30, page);
         if (page === 1) {
           setMedia(response);
         } else {
@@ -63,6 +65,24 @@ export const UserMediaContextProvider: React.FC<{
     setPage(1);
     setHasMore(true);
   };
+
+  const updatePostMedia = (updatedPost: PostType) => {
+    setMedia((prev) => {
+      return prev.map((userMedia) => {
+        // Kiểm tra nếu postId của userMedia trùng với postId của updatedPost
+        if (userMedia.post.postId === updatedPost.postId) {
+          // Nếu trùng thì trả về bản sao của userMedia với post đã được cập nhật
+          return {
+            ...userMedia,
+            post: updatedPost, // Cập nhật bài viết
+          };
+        }
+        // Nếu không trùng, trả về userMedia không thay đổi
+        return userMedia;
+      });
+    });
+  };
+
   return (
     <UserMediaContext.Provider
       value={{
@@ -74,6 +94,7 @@ export const UserMediaContextProvider: React.FC<{
         hasMore,
         resetMedia,
         page,
+        updatePostMedia,
         //   setUserMediaId,
       }}
     >

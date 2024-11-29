@@ -3,11 +3,12 @@ import HomeIcon from "@mui/icons-material/Home";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { usePosts } from "../../contexts";
+import { useNavigate } from "react-router-dom";
 
 export const Footer = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-
+  const navigate = useNavigate();
   const handleScroll = () => {
     if (window.scrollY > lastScrollY) {
       // Nếu cuộn xuống, ẩn footer
@@ -31,6 +32,7 @@ export const Footer = () => {
 
   const handleHomeClick = () => {
     resetPosts(); // Gọi resetPosts khi bấm nút Home
+    navigate("/");
   };
   return (
     <div

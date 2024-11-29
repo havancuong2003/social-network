@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Posts } from "../post-controller";
 import {
   FaFacebook,
@@ -19,6 +19,7 @@ import {
 import { PostType, UserType } from "../../model/user-profile.model";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
+import { useUserPosts } from "../../contexts";
 
 interface IntroductProps {
   classes?: {
@@ -39,6 +40,11 @@ export const Introduct: React.FC<IntroductProps> = ({
   posts,
   updatePost,
 }) => {
+  const { resetPosts } = useUserPosts();
+  useEffect(() => {
+    resetPosts();
+  }, []);
+
   return (
     <div className={clsx(classes?.containerUserProfile)}>
       <div className={clsx(classes?.infoPersonal)}>
@@ -165,7 +171,7 @@ export const Introduct: React.FC<IntroductProps> = ({
         </Box>
       </div>
       <div className={clsx(classes?.postPersonal)}>
-        <div className="text-center my-10">
+        <div className="text-center">
           <div className={`${user?._id === id ? "flex" : "hidden"}`}>
             <img
               src={userData.profilePic}
@@ -184,7 +190,7 @@ export const Introduct: React.FC<IntroductProps> = ({
         </div>
 
         {/* User's Posts */}
-        <div className="mt-6">
+        <div className="mt-4">
           <h2 className="text-lg font-semibold mb-2">Bài đăng</h2>
 
           <Posts posts={posts} updatePost={updatePost} />
